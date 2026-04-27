@@ -4,5 +4,7 @@ using System.Text;
 
 public interface IBorrowable
 {
+    void Borrow();
+    void Return();
     
 }
