@@ -16,10 +16,7 @@ namespace testing.src.Models
         {
             Console.WriteLine($"Id: {Id}");
             Console.WriteLine($"Title: {Title}");
-            if (IsAvailable)
-                Console.WriteLine("Is Available");
-            else
-                Console.WriteLine("Is Not Available");
+            Console.WriteLine($"Is Available: {(IsAvailable ? "Yes" : "No")}");
         }
 
         public void BuyItem()

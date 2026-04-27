@@ -4,29 +4,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using testing.src.Interfaces;
 
 namespace testing.src.Models
 {
     public class EBook : BookItem , IBuyable
     {
-        private string _fileFormat;
-        public string FileFormat
+        private string _fileSize;
+        public string FileSize
         {
-            get => _fileFormat;
+            get => _fileSize;
             set
             {
-                if (string.IsNullOrEmpty(value)) throw new Exception("File format cannot be null or empty");
-                _fileFormat = value;
+                if (string.IsNullOrEmpty(value) || value.Length > 100) throw new Exception("File size cannot be null or empty and must be less than 100 characters");
+                _fileSize = value;
             }
         }
-        public EBook(int id, string title, bool isAvailable, string author, string description, BookCategory category, string fileFormat) : base(id, title, isAvailable, author, description, category)
+        public EBook(int id, string title, bool isAvailable, string author, string description, BookCategory category, string fileSize) : base(id, title, isAvailable, author, description, category)
         {
-            FileFormat = fileFormat;
+            FileSize = fileSize;
         }
         public override void displayInfo()
         {
             base.displayInfo();
-            Console.WriteLine($"File Format: {FileFormat}");
+            Console.WriteLine($"File Size: {FileSize}");
 
         }
         

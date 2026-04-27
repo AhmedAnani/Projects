@@ -11,20 +11,13 @@ namespace testing.src.Models
     public class Book : BookItem ,  IBorrowable , IBuyable
     {
 
-        public Book(int id, string title, string author, string description, string category) : base(id, title, author, description, category)
+        public Book(int id, string title, bool isAvailable, string author, string description, BookCategory category) : base(id, title, isAvailable, author, description, category)
         {
         }
         public override void displayInfo()
         {
-            Console.WriteLine($"Id: {Id}");
-            Console.WriteLine($"Title: {Title}");
-            Console.WriteLine($"Author: {Author}");
-            Console.WriteLine($"Description: {Description}");
-            Console.WriteLine($"Category: {Category}");
-            if(IsAvailable)
-                 Console.WriteLine("Is Available");
-            else
-                Console.WriteLine("Is Not Available");
+            base.displayInfo();// Call the base method to display common information
+            
         }
 
         public void BorrowItem()

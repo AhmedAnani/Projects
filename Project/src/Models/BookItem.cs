@@ -50,11 +50,23 @@ namespace Project.src.Models
             }
         }
 
-        public Book(int id, string title, bool isAvailable, string author, string description, BookCategory category) : base(id, title, isAvailable)
+        public BookItem(int id, string title, bool isAvailable, string author, string description, BookCategory category) : base(id, title, isAvailable)
         {
             Author = author;
             Description = description;
             Category = category;
+        }
+
+        public override void displayInfo()
+        {
+            Console.WriteLine($"Id: {Id}");
+            Console.WriteLine($"Title: {Title}");
+            Console.WriteLine($"Author: {Author}");
+            Console.WriteLine($"Description: {Description}");
+            Console.WriteLine($"Category: {Category}");
+            Console.WriteLine($"Is Available: {(IsAvailable ? "Yes" : "No")}");
+
+
         }
     }
 }
