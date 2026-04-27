@@ -39,6 +39,7 @@ public abstract class LibraryItem
         }
     }
 
+
     public LibraryItem(int id, string title, bool isAvailable)
     {
         Id = id;
