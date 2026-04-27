@@ -23,20 +23,6 @@ public class Book : BookItem, IBorrowable, IBuyable
     {
     }
 
-
-        public override void displayInfo()
-        {
-            Console.WriteLine($"Id: {Id}");
-            Console.WriteLine($"Title: {Title}");
-            Console.WriteLine($"Author: {Author}");
-            Console.WriteLine($"Description: {Description}");
-            Console.WriteLine($"Category: {Category}");
-            if(IsAvailable)
-                 Console.WriteLine("Is Available");
-            else
-                Console.WriteLine("Is Not Available");
-        }
-
     public void BorrowItem()
     {
         if (!IsAvailable)
