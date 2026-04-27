@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-    public interface IBuyable
-    {
-        void BuyItem();
-    }
+public interface IBuyable
+{
+    void BuyItem();
+}

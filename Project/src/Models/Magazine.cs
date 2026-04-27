@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace testing.src.Models
 {
-    internal class Magazine : LibraryItem , IBuyable
+    internal class Magazine : LibraryItem, IBuyable
     {
         public Magazine(int id, string title, bool isAvailable) : base(id, title, isAvailable)
         {
