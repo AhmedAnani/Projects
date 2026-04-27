@@ -10,17 +10,6 @@ namespace Project.src.Services
         private const int MaxBorrowLimit = 3;
         private const int BorrowDaysLimit = 14; 
         private const double FinePerDay = 10.0;
-        //private DateTime _dueDate;
-        //public DateTime DueDate
-        //{
-        //    get => _dueDate;
-        //    private set
-        //    {
-        //        if (value < DateTime.Now) throw new Exception("Due date cannot be in the past");
-        //        _dueDate = value;
-        //    }
-        //}
-
         public void Process_Of_Borrow(User user, Book item)
         {
             if (user.BorrowedItems.Count >= MaxBorrowLimit)
