@@ -22,6 +22,7 @@ public class User
         Name = name;
     }
     public List<LibraryItem> BorrowedItems { get; set; } = new List<LibraryItem>();
+    public List<LibraryItem> BoughtItems { get; set; } = new List<LibraryItem>();
 
 }
 

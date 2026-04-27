@@ -60,7 +60,7 @@ public class Book : BookItem, IBorrowable, IBuyable
         }
         else
         {
-            Console.WriteLine("Sorry, this book is currently not available for buying.");
+            throw new Exception("Sorry, this book is currently not available for buying.");
         }
     }
 }
