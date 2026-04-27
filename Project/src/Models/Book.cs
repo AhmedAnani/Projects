@@ -1,29 +1,19 @@
-﻿using Project.src.Models;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using testing.src.Interfaces;
 
-namespace testing.src.Models
-{
+
+
     public class Book : BookItem ,  IBorrowable , IBuyable
     {
-
-
-        public override void displayInfo()
+        public Book(int id, string title, bool isAvailable, string author, string description, BookCategory category) : base(id, title, isAvailable, author, description, category)
         {
-            Console.WriteLine($"Id: {Id}");
-            Console.WriteLine($"Title: {Title}");
-            Console.WriteLine($"Author: {Author}");
-            Console.WriteLine($"Description: {Description}");
-            Console.WriteLine($"Category: {Category}");
-            if(IsAvailable)
-                 Console.WriteLine("Is Available");
-            else
-                Console.WriteLine("Is Not Available");
         }
+        
+
 
         public void BorrowItem()
         {
@@ -63,4 +53,4 @@ namespace testing.src.Models
             }
         }
     }
-}
+
