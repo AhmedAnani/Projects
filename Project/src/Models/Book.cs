@@ -11,7 +11,9 @@ namespace testing.src.Models
     public class Book : BookItem ,  IBorrowable , IBuyable
     {
 
-
+        public Book(int id, string title, string author, string description, string category) : base(id, title, author, description, category)
+        {
+        }
         public override void displayInfo()
         {
             Console.WriteLine($"Id: {Id}");
