@@ -62,9 +62,6 @@ public abstract class BookItem : LibraryItem
         Console.WriteLine($"Author: {Author}");
         Console.WriteLine($"Description: {Description}");
         Console.WriteLine($"Category: {Category}");
-        if (IsAvailable)
-            Console.WriteLine("Is Available");
-        else
-            Console.WriteLine("Is Not Available");
+        Console.WriteLine($"Is Available: {(IsAvailable ? "Yes" : "No")}");
     }
 }
