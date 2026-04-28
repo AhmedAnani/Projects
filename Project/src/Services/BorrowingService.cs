@@ -1,14 +1,13 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+using Project.src.Models;
+using testing.src.Models;
 
 namespace Project.src.Services
 {
-    public class BorrowingService
+    internal class BorrowingService
     {
         private const int MaxBorrowLimit = 3;
-        private const int BorrowDaysLimit = 14; 
+        private const int BorrowDaysLimit = 14;
         private const double FinePerDay = 10.0;
         public void Process_Of_Borrow(User user, Book item)
         {
@@ -16,7 +15,8 @@ namespace Project.src.Services
             {
                 throw new Exception("You have reached the maximum borrow limit.");
             }
-            else {
+            else
+            {
                 item.BorrowItem();
                 if (!item.IsAvailable)
                 {
@@ -27,10 +27,10 @@ namespace Project.src.Services
             }
 
         }
-        
-        public void Process_Of_Return(User user, Book item )
+
+        public void Process_Of_Return(User user, Book item)
         {
-            if(user.BorrowedItems.Contains(item))
+            if (user.BorrowedItems.Contains(item))
             {
                 user.BorrowedItems.Remove(item);
                 item.ReturnItem();

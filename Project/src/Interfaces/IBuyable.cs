@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public interface IBuyable
+namespace Project.src.Interfaces
 {
-    void BuyItem();
+    internal interface IBuyable
+    {
+        void BuyItem();
+    }
 }
