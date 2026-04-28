@@ -6,7 +6,7 @@ using testing.src.Models;
 
 namespace Project.src.Interfaces
 {
-    internal interface ILibraryRepo
+    public interface ILibraryRepo
     {
         void AddItem(LibraryItem book);
         void DeleteItem(int id);

@@ -10,7 +10,7 @@ using testing.src.Models;
 
 namespace Project.src.Controller
 {
-    internal class LibraryManager
+    public class LibraryManager
     {
         private readonly ILibraryRepo _libraryRepo; // Dependency on the library repository to manage library items
         private readonly AuthoService _authoService; // Dependency on the authorization service to check user permissions
@@ -39,9 +39,9 @@ namespace Project.src.Controller
             _libraryRepo.AddItem(book);
         }
 
-        public void UpdateItem(User user, int id, LibraryItem updatedBook)
+        public void UpdateItem(User admin, int id, LibraryItem updatedBook)
         {
-            if (!_authoService.CanManage(user))//Check if the user has permission to update items
+            if (!_authoService.CanManage(admin))//Check if the user has permission to update items
             {
                 
                 Console.WriteLine("You do not have permission to update books.");
@@ -69,7 +69,7 @@ namespace Project.src.Controller
 
         }
 
-        public void BuyItem(User user, Book item)
+        public void BuyItem(User user, LibraryItem item)
         {
             if (!_authoService.CanBuy(user))//Check if the user has permission to buy items
             {
@@ -82,33 +82,28 @@ namespace Project.src.Controller
 
         public void BorrowItem(User user, LibraryItem item)
         {
-            if (!_authoService.CanBorrow(user))//Check if the user has permission to borrow items
+            if (_authoService.CanBorrow(user))//Check if the user has permission to borrow items
             {
-                Console.WriteLine("You do not have permission to borrow items.");
-                return;
+                _borrowingService.Process_Of_Borrow(user, item);
             }
-            if (item is not Book)
+            else 
             {
-                Console.WriteLine("Only books can be borrowed.");
-                return;
+                Console.WriteLine("You do not have permission to borrow.");
             }
-            _borrowingService.Process_Of_Borrow(user,(Book)item);
 
         }
 
         public void ReturnItem(User user, LibraryItem item)
         {
-            if (!_authoService.CanBorrow(user))//Check if the user has permission to borrow items 
+            if (_authoService.CanBorrow(user))//Check if the user has permission to borrow items 
             {
-                Console.WriteLine("You do not have permission to return items.");
-                return;
+                _borrowingService.Process_Of_Return(user, (Book)item);
             }
-            if(item is not Book)
+            else
             {
-                Console.WriteLine("Only books can be returned.");
-                return;
+                Console.WriteLine("Permission Denied: You cannot perform return operations.");
             }
-            _borrowingService.Process_Of_Return(user,(Book)item);
+            
 
         }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project.src.Interfaces
 {
-    internal interface IBuyable
+    public interface IBuyable
     {
         void BuyItem();
     }
