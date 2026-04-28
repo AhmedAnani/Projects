@@ -10,6 +10,16 @@ namespace testing.src.Models
 {
     public class Book : BookItem ,  IBorrowable , IBuyable
     {
+        private DateTime _dueDate;
+        public DateTime DueDate
+        {
+            get => _dueDate;
+            set
+            {
+                if (value < DateTime.Now) throw new Exception("Due date cannot be in the past");
+                _dueDate = value;
+            }
+        }
 
         public Book(int id, string title, bool isAvailable, string author, string description, BookCategory category) : base(id, title, isAvailable, author, description, category)
         {
