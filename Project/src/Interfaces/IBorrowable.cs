@@ -3,9 +3,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public interface IBorrowable
+namespace Project.src.Interfaces
 {
-    void BorrowItem();
-    void ReturnItem();
+    internal interface IBorrowable
+    {
+        void BorrowItem();
+        void ReturnItem();
+    }
 }
-

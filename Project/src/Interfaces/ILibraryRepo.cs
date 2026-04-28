@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using System.Text;
 using testing.src.Models;
 
-public interface ILibraryRepo
+namespace Project.src.Interfaces
 {
-    void AddItem(LibraryItem book);
-    void DeleteItem( int id);
-    
-    void UpdateItem( int id, LibraryItem updatedBook);
+    internal interface ILibraryRepo
+    {
+        void AddItem(LibraryItem book);
+        void DeleteItem(int id);
 
-    List<LibraryItem> GetAllItems();
+        void UpdateItem(int id, LibraryItem updatedBook);
 
+        List<LibraryItem> GetAllItems();
+
+    }
 }
