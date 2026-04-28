@@ -59,6 +59,7 @@ namespace Project.src.Models
                 _role = value;
             }
         }
+        
 
         public User(int id, string name, string email,UserRole role)
         {
