@@ -23,10 +23,10 @@ namespace testing.src.Services
 
         public void AddItem(User user, LibraryItem book)
         {
-            if (_authoService.CanAdd(user))//Check if the user has permission to add items
+            if (_authoService.CanManage(user))//Check if the user has permission to add items
             {
                 _libraryRepo.AddItem(book);
-                Console.WriteLine("Book added successfully.");
+                
             }
             else
             {
@@ -36,10 +36,10 @@ namespace testing.src.Services
 
         public void UpdateItem(User user, int id, LibraryItem updatedBook)
         {
-            if (_authoService.CanUpdate(user))//Check if the user has permission to update items
+            if (_authoService.CanManage(user))//Check if the user has permission to update items
             {
                 _libraryRepo.UpdateItem(id, updatedBook);
-                Console.WriteLine("Book updated successfully.");
+                
             }
             else
             {
@@ -49,10 +49,10 @@ namespace testing.src.Services
 
         public void DeleteItem(User user, int id)
         {
-            if (_authoService.CanDelete(user))//Check if the user has permission to delete items
+            if (_authoService.CanManage(user))//Check if the user has permission to delete items
             {
                 _libraryRepo.DeleteItem(id);
-                Console.WriteLine("Book deleted successfully.");
+                
             }
             else
             {
@@ -60,7 +60,7 @@ namespace testing.src.Services
             }
         }
 
-        public List<LibraryItem> GetItems()
+        public List<LibraryItem> GetItems()//Return the list of all library items
         {
 
             return _libraryRepo.GetAllItems();

@@ -8,19 +8,11 @@ namespace Project.src.Services
 {
     internal class AuthoService
     {
-        public bool CanUpdate(User user)
+        public bool CanManage(User user)
         {
             return user.Role == UserRole.Admin;
         }
-        public bool CanAdd(User user)
-        {
-            return user.Role == UserRole.Admin;
-        }
-
-        public bool CanDelete(User user)
-        {
-            return user.Role == UserRole.Admin;
-        }   
+        
         
         public bool CanBuy(User user)
         {
@@ -32,6 +24,7 @@ namespace Project.src.Services
             return user.Role == UserRole.User;
         }
 
-       
+        
+
     }
 }
