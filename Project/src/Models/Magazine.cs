@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using testing.src.Interfaces;
 
 namespace testing.src.Models
 {
-    internal class Magazine : LibraryItem , IBuyable
+    internal class Magazine : LibraryItem, IBuyable
     {
         public Magazine(int id, string title, bool isAvailable) : base(id, title, isAvailable)
         {
