@@ -1,4 +1,4 @@
-﻿using Project.src.Enums;
+using Project.src.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -59,6 +59,7 @@ namespace Project.src.Models
                 _role = value;
             }
         }
+        
 
         public User(int id, string name, string email,UserRole role)
         {
