@@ -14,14 +14,11 @@ namespace Project.src.Controller
     {
         private readonly ILibraryRepo _libraryRepo; // Dependency on the library repository to manage library items
         private readonly AuthoService _authoService; // Dependency on the authorization service to check user permissions
-        private readonly BuyingService _buyingService;
-        private readonly BorrowingService _borrowingService;
+        private readonly BuyingService _buyingService;// Dependency on the buying service to handle buying operations
+        private readonly BorrowingService _borrowingService;// Dependency on the borrowing service to handle borrowing operations
 
         public LibraryManager(
-            ILibraryRepo bookRepo,
-            AuthoService authoService,
-            BuyingService buyingService,
-            BorrowingService borrowingService)
+            ILibraryRepo bookRepo, AuthoService authoService, BuyingService buyingService,BorrowingService borrowingService)
         {
             _libraryRepo = bookRepo;
             _authoService = authoService;
