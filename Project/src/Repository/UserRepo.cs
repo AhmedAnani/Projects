@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Project.src.Repository
 {
-    internal class UserRepo
+    public class UserRepo
     {
         private List<User> _users = new List<User>();
 
@@ -13,11 +13,11 @@ namespace Project.src.Repository
         {
             if (_users.Any(u => u.Id == user.Id))
             {
-                Console.WriteLine("User with this ID already exists.");
+                throw new Exception("ID already exists.");
             }
             if (_users.Any(b => b.Email == user.Email))
             {
-                Console.WriteLine("User with this email already exists.");
+                throw new Exception("Email already exists.");
             }
 
             _users.Add(user);
@@ -44,18 +44,17 @@ namespace Project.src.Repository
 
         public void UpdateUser(int userId, User userUpdate)
         {
-            var user = _users.Find(u => u.Id == userId);
+            int index = _users.FindIndex(u => u.Id == userId);
 
-            if (user == null)
+            if (index == -1)
             {
                 Console.WriteLine("User not found.");
                 return;
-
             }
-            userUpdate.Id = userId;
-            _users[userId] = userUpdate;
 
-
+            userUpdate.Id = userId; 
+            _users[index] = userUpdate;
+            Console.WriteLine($"User {userUpdate.Name} updated successfully.");
         }
     }
 }

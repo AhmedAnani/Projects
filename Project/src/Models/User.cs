@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Project.src.Models
 {
-    internal class User
+    public class User
     {
         private int _id;
 

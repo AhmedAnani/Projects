@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Project.src.Interfaces
 {
-    internal interface IBorrowable
+    public interface IBorrowable
     {
         void BorrowItem();
         void ReturnItem();

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Project.src.Services
 {
-    internal class AuthoService
+    public class AuthoService
     {
         public bool CanManage(User user)
         {

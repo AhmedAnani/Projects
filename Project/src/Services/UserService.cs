@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Project.src.Services
 {
-    internal class UserService
+    public class UserService
     {
         private readonly UserRepo _userRepo; // Dependency on the user repository to manage user data
         private readonly AuthoService _authoService; // Dependency on the authorization service to check user permissions

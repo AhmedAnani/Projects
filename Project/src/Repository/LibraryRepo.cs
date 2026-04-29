@@ -3,15 +3,15 @@
 
 namespace Project.src.Repository
 {
-    internal class LibraryRepo : ILibraryRepo
+    public class LibraryRepo : ILibraryRepo
     {
         private List<LibraryItem> _items = new List<LibraryItem>();
         public void AddItem(LibraryItem item)//Add a new item to the library
         {
             if(_items.Any(b => b.Id == item.Id))//Check if an item with the same ID already exists
             {
-                Console.WriteLine("ID already exists.");
-                return;
+                throw new Exception("ID already exists.");
+
             }
            
             _items.Add(item);

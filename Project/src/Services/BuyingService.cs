@@ -9,7 +9,7 @@ using testing.src.Models;
 
 namespace Project.src.Services
 {
-    internal class BuyingService
+    public class BuyingService
     {
         
         public void Process_Of_Buying(User user, LibraryItem item)
