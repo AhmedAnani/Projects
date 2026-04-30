@@ -1,4 +1,5 @@
 ﻿using Project.src.Interfaces;
+using testing.src.Models;
 
 
 namespace Project.src.Repository
@@ -42,15 +43,41 @@ namespace Project.src.Repository
 
         public void UpdateItem(int id, LibraryItem updateditem)//Find the item by id and update it with the new information
         {
-            int index = _items.FindIndex(b => b.Id == id);
-            if (index == -1)
+            var existingItem = _items.FirstOrDefault(b => b.Id == id);
+
+            if (existingItem == null)
             {
-                Console.WriteLine("Book not found.");
+                Console.WriteLine("Item not found.");
                 return;
             }
-            updateditem.Id = id; // Ensure the updated item has the same ID
-            _items[index] = updateditem;
-            Console.WriteLine($"{updateditem.Title} updated successfully.");
+
+            try
+            {
+                // Basic properties
+                existingItem.Title = updateditem.Title;
+                existingItem.IsAvailable = updateditem.IsAvailable;
+
+                // Handle specific types
+                if (existingItem is Book existingBook && updateditem is Book newBook)
+                {
+                    existingBook.Author = newBook.Author;
+                    existingBook.Description = newBook.Description;
+                    existingBook.Category = newBook.Category;
+                }
+                else if (existingItem is EBook existingEBook && updateditem is EBook newEBook)
+                {
+                    existingEBook.Author = newEBook.Author;
+                    existingEBook.Description = newEBook.Description;
+                    existingEBook.Category = newEBook.Category;
+                    existingEBook.FileSize = newEBook.FileSize;
+                }
+
+                Console.WriteLine($"{existingItem.Title} updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Update failed: {ex.Message}");
+            }
         }
        
     }
