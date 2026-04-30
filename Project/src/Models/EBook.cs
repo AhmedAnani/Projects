@@ -11,7 +11,7 @@ namespace testing.src.Models
 {
     public class EBook : BookItem , IBuyable
     {
-        private string _fileSize;
+        private string _fileSize = string.Empty;
         public string FileSize
         {
             get => _fileSize;

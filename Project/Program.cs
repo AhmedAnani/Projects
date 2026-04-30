@@ -23,18 +23,20 @@ class Program
         
         var admin = new User(1, "Aya Hassan", "aya@ischool.com", UserRole.Admin);
         var user = new User(2, "Bob", "bob@example.com", UserRole.User);
+        
+
+        //var book1 = new Book(1, "C# Basics", true, "John", "Learn Programming", BookCategory.Science);
+        //var ebook1 = new EBook(2, "AI Future", true, "Sara", "Future of Tech", BookCategory.Science, "2MB");
+        //var mag1 = new Magazine(3, "Tech Today", true);
+
         userService.AddUser(admin, admin);
         userService.AddUser(user, admin);
-
-        var book1 = new Book(1, "C# Basics", true, "John", "Learn Programming", BookCategory.Science);
-        var ebook1 = new EBook(2, "AI Future", true, "Sara", "Future of Tech", BookCategory.Science, "2MB");
-        var mag1 = new Magazine(3, "Tech Today", true);
-
         
-        manager.AddItem(admin, book1);
-        manager.AddItem(admin, ebook1);
-        manager.AddItem(admin, mag1);
+        //manager.AddItem(admin, book1);
+        //manager.AddItem(admin, ebook1);
+        //manager.AddItem(admin, mag1);
 
+        var currentUser = user;
         string choice;
         do
         {
@@ -52,35 +54,42 @@ class Program
 
             try
             {
+               
                 switch (choice)
                 {
                     case "1":
+                        if(!authService.CanManage(currentUser))
+                        {
+                            Console.WriteLine("Access Denied: Admin only.");
+                            break;
+                        }
+                        
                         Console.WriteLine("id of book:");
                         int BookId;
                         int.TryParse(Console.ReadLine(), out BookId);
                         Console.WriteLine("name of book:");
-                        string BookName = Console.ReadLine();
+                        string BookName = Console.ReadLine() ?? "";
                         Console.WriteLine("this book is Available or not?");
                         bool IsAvailable;
                         bool.TryParse(Console.ReadLine(), out IsAvailable);
                         Console.WriteLine("name of Author:");
-                        string BookAuthor = Console.ReadLine();
+                        string BookAuthor = Console.ReadLine() ?? "";
                         Console.WriteLine("description :");
-                        string BookDescription= Console.ReadLine();
+                        string BookDescription= Console.ReadLine() ?? "";
                         Console.WriteLine("choose category of book:");
                         foreach(var category in Enum.GetValues(typeof(BookCategory)))
                         {
                             Console.WriteLine($"{(int)category}-{category}");
                         }
                         Console.Write("Enter category number or name: ");
-                        string inputCategory= Console.ReadLine();
+                        string inputCategory= Console.ReadLine() ?? "";
                         if (!Enum.TryParse(inputCategory, true, out BookCategory BookCategory))
                         {
                             Console.WriteLine("Invalid category");
                         }
 
                         var newBook = new Book(BookId, BookName, IsAvailable, BookAuthor, BookDescription, BookCategory);
-                        manager.AddItem(admin, newBook);
+                        manager.AddItem(user, newBook);
                         Console.WriteLine("Book added successfully!");
                         break;
 
@@ -100,8 +109,13 @@ class Program
                         break;
 
                     case "4":
+                        if(!authService.CanBorrow(currentUser))
+                        {
+                            Console.WriteLine("Access Denied: User only.");
+                            break;
+                        }
                         Console.WriteLine("Title of book ?");
-                        string chooser = Console.ReadLine()?.Trim();
+                        string chooser = Console.ReadLine()?.Trim() ?? "";
                         var bookToBorrow = repo.GetAllItems().FirstOrDefault(i=>i.Title.Equals(chooser.ToLower()));
                         if (bookToBorrow == null)
                         {
@@ -111,9 +125,14 @@ class Program
                         else manager.BorrowItem(user, bookToBorrow);
                         break;
                     case "5":
+                        if (!authService.CanBuy(currentUser))
+                        {
+                            Console.WriteLine("Access Denied: User only.");
+                            break;
+                        }
                         Console.WriteLine("Title of book ?");
-                        string chooser1 = Console.ReadLine()?.Trim();
-                        var itemToBuy = repo.GetAllItems().FirstOrDefault(i => i is IBuyable && i.IsAvailable && i.Title.Equals(chooser1.ToLower()));
+                        string chooser1 = Console.ReadLine()?.Trim() ?? "";
+                        var itemToBuy = repo.GetAllItems().FirstOrDefault(i => i is IBuyable && i.IsAvailable && i.Title.ToLower().Equals(chooser1.ToLower()));
                         if (itemToBuy != null)
                         {
                             manager.BuyItem(user, itemToBuy); 
@@ -122,6 +141,11 @@ class Program
                         break;
 
                     case "6":
+                        if (!authService.CanBorrow(currentUser))
+                        {
+                            Console.WriteLine("Access Denied: User only.");
+                            break;
+                        }
                         if (user.BorrowedItems.Any())
                         {
                             Console.WriteLine("Your borrowed items:");
@@ -130,7 +154,7 @@ class Program
                                 Console.WriteLine($"{borrowItem.Title}");
                             }
                             Console.WriteLine("which book you want to return ?");
-                            string chooser3= Console.ReadLine()?.Trim();
+                            string chooser3= Console.ReadLine()?.Trim() ?? "";
                             var returnbook = user.BorrowedItems.FirstOrDefault(i => i.Title.Equals(chooser3.ToLower()));
                             if (returnbook != null)
                                 manager.ReturnItem(user, returnbook);

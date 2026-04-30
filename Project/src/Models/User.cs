@@ -9,9 +9,9 @@ namespace Project.src.Models
     {
         private int _id;
 
-        private string _name;
+        private string _name = string.Empty;
 
-        private string _email;
+        private string _email = string.Empty;
 
         private UserRole _role;
 

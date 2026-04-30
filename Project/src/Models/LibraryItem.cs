@@ -5,8 +5,8 @@ using System.Text;
 public abstract class LibraryItem
 {
     private int _id;
-    private string _title;
-    private bool _isAvailable;
+    private string _title = string.Empty;
+    private bool _isAvailable = false;
 
     public bool IsAvailable
     {
