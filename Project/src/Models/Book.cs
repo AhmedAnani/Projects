@@ -31,17 +31,18 @@ namespace testing.src.Models
             
         }
 
-        public void BorrowItem()
+        public bool BorrowItem()
         {
             if (!IsAvailable)
             {
                 Console.WriteLine("Sorry, this book is currently not available for borrowing.");
-                return;
+                return false;
             }
             else
             {
                 IsAvailable = false;
                 Console.WriteLine($"You have borrowed the book: {Title}");
+                return true;
             }
         }
 

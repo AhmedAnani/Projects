@@ -26,6 +26,15 @@ class Program
         userService.AddUser(admin, admin);
         userService.AddUser(user, admin);
 
+        var book1 = new Book(1, "C# Basics", true, "John", "Learn Programming", BookCategory.Science);
+        var ebook1 = new EBook(2, "AI Future", true, "Sara", "Future of Tech", BookCategory.Science, "2MB");
+        var mag1 = new Magazine(3, "Tech Today", true);
+
+        
+        manager.AddItem(admin, book1);
+        manager.AddItem(admin, ebook1);
+        manager.AddItem(admin, mag1);
+
         string choice;
         do
         {
@@ -35,7 +44,7 @@ class Program
             Console.WriteLine("2. View All Items");
             Console.WriteLine("3. Search for Item (by ID)");
             Console.WriteLine("4. Borrow a Book");
-            Console.WriteLine("5. Buy an Item (EBook/Magazine)");
+            Console.WriteLine("5. Buy an Item (Book/EBook/Magazine)");
             Console.WriteLine("6. Return a Book");
             Console.WriteLine("7. Exit");
             Console.Write("Enter your choice: ");
@@ -46,8 +55,31 @@ class Program
                 switch (choice)
                 {
                     case "1":
-                       
-                        var newBook = new Book(101, "Clean Code", true, "Robert Martin", "Software Principles", BookCategory.Science);
+                        Console.WriteLine("id of book:");
+                        int BookId;
+                        int.TryParse(Console.ReadLine(), out BookId);
+                        Console.WriteLine("name of book:");
+                        string BookName = Console.ReadLine();
+                        Console.WriteLine("this book is Available or not?");
+                        bool IsAvailable;
+                        bool.TryParse(Console.ReadLine(), out IsAvailable);
+                        Console.WriteLine("name of Author:");
+                        string BookAuthor = Console.ReadLine();
+                        Console.WriteLine("description :");
+                        string BookDescription= Console.ReadLine();
+                        Console.WriteLine("choose category of book:");
+                        foreach(var category in Enum.GetValues(typeof(BookCategory)))
+                        {
+                            Console.WriteLine($"{(int)category}-{category}");
+                        }
+                        Console.Write("Enter category number or name: ");
+                        string inputCategory= Console.ReadLine();
+                        if (!Enum.TryParse(inputCategory, true, out BookCategory BookCategory))
+                        {
+                            Console.WriteLine("Invalid category");
+                        }
+
+                        var newBook = new Book(BookId, BookName, IsAvailable, BookAuthor, BookDescription, BookCategory);
                         manager.AddItem(admin, newBook);
                         Console.WriteLine("Book added successfully!");
                         break;
@@ -68,16 +100,20 @@ class Program
                         break;
 
                     case "4":
-                        var bookToBorrow = repo.GetAllItems().FirstOrDefault(i => i is Book && i.IsAvailable);
-                        if (bookToBorrow != null)
+                        Console.WriteLine("Title of book ?");
+                        string chooser = Console.ReadLine()?.Trim();
+                        var bookToBorrow = repo.GetAllItems().FirstOrDefault(i=>i.Title.Equals(chooser.ToLower()));
+                        if (bookToBorrow == null)
                         {
-                            manager.BorrowItem(user, (Book)bookToBorrow);
+                            Console.WriteLine("No books available for borrowing.");
+                            
                         }
-                        else Console.WriteLine("No books available for borrowing.");
+                        else manager.BorrowItem(user, bookToBorrow);
                         break;
-
                     case "5":
-                        var itemToBuy = repo.GetAllItems().FirstOrDefault(i => i is IBuyable && i.IsAvailable);
+                        Console.WriteLine("Title of book ?");
+                        string chooser1 = Console.ReadLine()?.Trim();
+                        var itemToBuy = repo.GetAllItems().FirstOrDefault(i => i is IBuyable && i.IsAvailable && i.Title.Equals(chooser1.ToLower()));
                         if (itemToBuy != null)
                         {
                             manager.BuyItem(user, itemToBuy); 
@@ -88,7 +124,18 @@ class Program
                     case "6":
                         if (user.BorrowedItems.Any())
                         {
-                            manager.ReturnItem(user, user.BorrowedItems[0]);
+                            Console.WriteLine("Your borrowed items:");
+                            foreach (var borrowItem in user.BorrowedItems)
+                            {
+                                Console.WriteLine($"{borrowItem.Title}");
+                            }
+                            Console.WriteLine("which book you want to return ?");
+                            string chooser3= Console.ReadLine()?.Trim();
+                            var returnbook = user.BorrowedItems.FirstOrDefault(i => i.Title.Equals(chooser3.ToLower()));
+                            if (returnbook != null)
+                                manager.ReturnItem(user, returnbook);
+                            else
+                                Console.WriteLine("You don't have a borrowed book with this title.");
                         }
                         else Console.WriteLine("You have no borrowed items.");
                         break;
