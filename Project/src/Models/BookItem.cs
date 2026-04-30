@@ -7,9 +7,9 @@ namespace Project.src.Models
     public abstract class BookItem : LibraryItem
     {
 
-        private string _author;
+        private string _author = string.Empty;
 
-        private string _description;
+        private string _description = string.Empty;
 
         private BookCategory _category;
 
