@@ -22,7 +22,8 @@ class Program
 
         
         var admin = new User(1, "Aya Hassan", "aya@ischool.com", UserRole.Admin);
-        var user = new User(2, "Bob", "bob@example.com", UserRole.User);
+        var user = new User(2, "Yasser", "Yas@ischool" +
+            ".com", UserRole.User);
         
 
         //var book1 = new Book(1, "C# Basics", true, "John", "Learn Programming", BookCategory.Science);
@@ -36,7 +37,7 @@ class Program
         //manager.AddItem(admin, ebook1);
         //manager.AddItem(admin, mag1);
 
-        var currentUser = user;
+        var currentUser = admin;
         string choice;
         do
         {
@@ -48,7 +49,11 @@ class Program
             Console.WriteLine("4. Borrow a Book");
             Console.WriteLine("5. Buy an Item (Book/EBook/Magazine)");
             Console.WriteLine("6. Return a Book");
-            Console.WriteLine("7. Exit");
+            Console.WriteLine("7. Add a User");
+            Console.WriteLine("8. Update User info");
+            Console.WriteLine("9. Delete User");
+            Console.WriteLine("10. List of Users");
+            Console.WriteLine("11. Exit");
             Console.Write("Enter your choice: ");
             choice = Console.ReadLine();
 
@@ -163,8 +168,86 @@ class Program
                         }
                         else Console.WriteLine("You have no borrowed items.");
                         break;
-
                     case "7":
+                        if (!authService.CanManage(currentUser))
+                        {
+                            Console.WriteLine("Access Denied: Admin only.");
+                            break;
+
+                        }
+                        int userId;
+                        Console.WriteLine("Insert User Id:");
+                        int.TryParse(Console.ReadLine(), out userId);
+                        Console.WriteLine("Insert User Name:");
+                        string name = Console.ReadLine()??"";
+                        Console.WriteLine("Insert User Email:");
+                        string email = Console.ReadLine() ?? "";
+                        Console.WriteLine("Choose Role of User:");
+                        foreach (var category in Enum.GetValues(typeof(UserRole)))
+                        {
+                            Console.WriteLine($"{(int)category}-{category}");
+                        }
+                        Console.Write("Enter category number or name: ");
+                        string inputRole = Console.ReadLine() ?? "";
+                        if (!Enum.TryParse(inputRole, true, out UserRole userRole))
+                        {
+                            Console.WriteLine("Invalid category");
+                        }
+                         User agent =new User(userId, name, email,userRole);
+                        userService.AddUser(agent,currentUser);
+
+                        break;
+                    case "8":
+                        if (!authService.CanManage(currentUser))
+                        {
+                            Console.WriteLine("Access Denied: Admin only.");
+                            break;
+                        }
+                        Console.WriteLine("Insert User Id");
+                        int UpdateUser;
+                        int.TryParse(Console.ReadLine(), out UpdateUser);
+                        Console.WriteLine("Name of User");
+                        string Username = Console.ReadLine() ?? "";
+                        Console.WriteLine("Email of User");
+                        string UserEmail = Console.ReadLine() ?? "";
+                        Console.WriteLine("Choose Role of User:");
+                        foreach (var category in Enum.GetValues(typeof(UserRole)))
+                        {
+                            Console.WriteLine($"{(int)category}-{category}");
+                        }
+                        Console.Write("Enter category number or name: ");
+                        string inRole = Console.ReadLine() ?? "";
+                        if (!Enum.TryParse(inRole, true, out UserRole URole))
+                        {
+                            Console.WriteLine("Invalid category");
+                        }
+                        var u = new User(UpdateUser, Username, UserEmail, URole);
+                        userService.UpdateUser(u,currentUser,u.Id);
+                        break;
+                    case "9":
+                        if (!authService.CanManage(currentUser))
+                        {
+                            Console.WriteLine("Access Denied: Admin only.");
+                            break;
+                        }
+                        Console.WriteLine("Insert User Id");
+                        int DUser;
+                        int.TryParse(Console.ReadLine(), out DUser);
+                        userService.DeleteUser(DUser, currentUser);
+                        break;
+
+                    case "10":
+                       
+                      var users=  userService.GetUsers(currentUser);
+                        foreach(var item in users)
+                        {
+                            Console.WriteLine($"User Id: {item.Id}");
+                            Console.WriteLine($"User Name: {item.Name}");
+                            Console.WriteLine($"User Email: {item.Email}");
+                            Console.WriteLine($"User Role: {item.Role}");
+                        }
+                        break;
+                    case "11":
                         Console.WriteLine("Exiting... Goodbye!");
                         break;
 
@@ -178,13 +261,13 @@ class Program
                 Console.WriteLine($"Error: {ex.Message}");
             }
 
-            if (choice != "7")
+            if (choice != "11")
             {
                 Console.WriteLine("\nPress any key to continue...");
                 Console.ReadKey();
             }
 
-        } while (choice != "7"); 
+        } while (choice != "11"); 
     }
 
     static void Print(LibraryManager manager)

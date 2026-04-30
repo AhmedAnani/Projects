@@ -7,6 +7,7 @@ namespace Project.src.Repository
 {
     public class UserRepo
     {
+        
         private List<User> _users = new List<User>();
 
         public void AddUser(User user)
@@ -44,17 +45,27 @@ namespace Project.src.Repository
 
         public void UpdateUser(int userId, User userUpdate)
         {
-            int index = _users.FindIndex(u => u.Id == userId);
+            var existingUser = _users.FirstOrDefault(u => u.Id == userId);
 
-            if (index == -1)
+            if (existingUser == null)
             {
                 Console.WriteLine("User not found.");
                 return;
             }
 
-            userUpdate.Id = userId; 
-            _users[index] = userUpdate;
-            Console.WriteLine($"User {userUpdate.Name} updated successfully.");
+            try
+            {
+                existingUser.Name = userUpdate.Name;
+                existingUser.Email = userUpdate.Email;
+                existingUser.Role = userUpdate.Role;
+
+                Console.WriteLine($"User {existingUser.Name} updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Update failed: {ex.Message}");
+            }
         }
     }
+    
 }
