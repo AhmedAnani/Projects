@@ -7,7 +7,8 @@ namespace Project.src.Interfaces
 {
     public interface IBorrowable
     {
-        void BorrowItem();
+        public DateTime DueDate { get; set; }
+        bool BorrowItem();
         void ReturnItem();
     }
 }

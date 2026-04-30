@@ -35,7 +35,7 @@ public abstract class LibraryItem
         {
             if (string.IsNullOrEmpty(value)) throw new Exception("Title cannot be null or empty");
 
-            _title = value;
+            _title = value.ToLower();
         }
     }
 
