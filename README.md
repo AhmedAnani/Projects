@@ -12,11 +12,19 @@ A console-based Library Management System built in C# that demonstrates object-o
 - **Return Books** - Return borrowed books with late fee calculation
 
 ### For Admins
+- **User Management** - Add, update, and delete user accounts
+
+### For Employees
 - **Add New Items** - Add new books, eBooks, or magazines to the library
 - **Update Items** - Modify existing item information
 - **Delete Items** - Remove items from the library
-- **User Management** - Add, update, and delete user accounts
+- **Can Borrow&Buy Items** - Act Like Users
 
+### For Users
+- **View Items**
+- **Borrow Items**
+- **Buy Items**
+  
 ### System Rules
 - Maximum borrow limit: **3 books per user**
 - Borrowing period: **14 days**
@@ -24,6 +32,10 @@ A console-based Library Management System built in C# that demonstrates object-o
 - Only books are borrowable (eBooks and magazines are buy-only)
 - Items must be available to be borrowed or purchased
 
-##  Architecture
+### Architecture
+- Controller Layer → Handles user actions (LibraryManager)
+- Service Layer → Business logic (Borrowing, Buying, Auth)
+- Repository Layer → Data storage and management
+- Model Layer → Core entities (User, Book, etc.)
 
-The project follows a layered architecture with clear separation of concerns:
+### GG
