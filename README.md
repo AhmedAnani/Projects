@@ -38,4 +38,9 @@ A console-based Library Management System built in C# that demonstrates object-o
 - Repository Layer → Data storage and management
 - Model Layer → Core entities (User, Book, etc.)
 
+### Data Persistence
+- Loads items from items.txt on startup
+- Saves changes automatically after updates
+- Simple structured format:
+
 ### GG
