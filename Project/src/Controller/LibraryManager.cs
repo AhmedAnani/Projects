@@ -17,6 +17,7 @@ namespace Project.src.Controller
         private readonly BuyingService _buyingService;// Dependency on the buying service to handle buying operations
         private readonly BorrowingService _borrowingService;// Dependency on the borrowing service to handle borrowing operations
 
+
         public LibraryManager(
             ILibraryRepo bookRepo, AuthoService authoService, BuyingService buyingService,BorrowingService borrowingService)
         {
@@ -26,7 +27,7 @@ namespace Project.src.Controller
             _borrowingService = borrowingService;
         }
 
-        public void AddItem(User user, LibraryItem book)
+        public void AddItem(User user, LibraryItem book)//Add item
         {
             if (!_authoService.CanControl(user))//Check if the user has permission to add items
             {
@@ -36,7 +37,7 @@ namespace Project.src.Controller
             _libraryRepo.AddItem(book);
         }
 
-        public void UpdateItem(User admin, int id, LibraryItem updatedBook)
+        public void UpdateItem(User admin, int id, LibraryItem updatedBook)//update item
         {
             if (!_authoService.CanControl(admin))//Check if the user has permission to update items
             {
@@ -48,9 +49,9 @@ namespace Project.src.Controller
 
         }
 
-        public void DeleteItem(User user, int id)
+        public void DeleteItem(User user, int id)//delete item
         {
-            if (!_authoService.CanControl(user))//Check if the user has permission to delete items
+            if (!_authoService.CanManage(user))//Check if the user has permission to delete items
             {
                 
                 Console.WriteLine("You do not have permission to delete books.");
@@ -66,7 +67,7 @@ namespace Project.src.Controller
 
         }
 
-        public void BuyItem(User user, LibraryItem item)
+        public void BuyItem(User user, LibraryItem item)//buy item
         {
             if (!_authoService.CanBuy(user))//Check if the user has permission to buy items
             {
@@ -77,7 +78,7 @@ namespace Project.src.Controller
             _buyingService.Process_Of_Buying(user, item);
         }
 
-        public void BorrowItem(User user, LibraryItem item)
+        public void BorrowItem(User user, LibraryItem item)// Borrow item
         {
             if (_authoService.CanBorrow(user))//Check if the user has permission to borrow items
             {
@@ -90,7 +91,7 @@ namespace Project.src.Controller
 
         }
 
-        public void ReturnItem(User user, LibraryItem item)
+        public void ReturnItem(User user, LibraryItem item)// returen item
         {
             if (_authoService.CanBorrow(user))//Check if the user has permission to borrow items 
             {

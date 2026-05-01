@@ -15,17 +15,12 @@ namespace Project.src.Services
         public void Process_Of_Buying(User user, LibraryItem item)
         {
 
-            if(item is not IBuyable buyableItem)
+            if(item is not IBuyable buyableItem)// Check item can be Buy or not
             {
                 Console.WriteLine("This item is not available for buying.");
                 return;
             }
-            if (!item.IsAvailable)
-            {
-                Console.WriteLine("Item is not available.");
-                return;
-            }
-
+            
             buyableItem.BuyItem();
             user.BoughtItems.Add(item);
 

@@ -24,7 +24,7 @@ namespace Project.src.Repository
 
         public void DeleteItem(int id)
         {
-            var item = _items.FirstOrDefault(b => b.Id == id);
+            var item = _items.FirstOrDefault(b => b.Id == id);//Check if item Exist 
             if (item == null)
             {
                 Console.WriteLine("Book not found.");
@@ -54,11 +54,11 @@ namespace Project.src.Repository
 
             try
             {
-                // Basic properties
+                // Magazine properties
                 existingItem.Title = updateditem.Title;
                 existingItem.IsAvailable = updateditem.IsAvailable;
 
-                // Handle specific types
+                // Handle Book &Ebook
                 if (existingItem is BookItem existingBook && updateditem is BookItem newBook)
                 {
                     existingBook.Author = newBook.Author;
@@ -78,7 +78,7 @@ namespace Project.src.Repository
         }
         public bool CheckItem(int id)
         {
-            var DeleteItem = _items.Find(i => i.Id == id);
+            var DeleteItem = _items.Find(i => i.Id == id);//// Check item is Exist
             if (DeleteItem == null) 
                 return false;
 
