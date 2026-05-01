@@ -32,3 +32,10 @@ A console-based Library Management System built in C# that demonstrates object-o
 - Only books are borrowable (eBooks and magazines are buy-only)
 - Items must be available to be borrowed or purchased
 
+### Architecture
+- Controller Layer → Handles user actions (LibraryManager)
+- Service Layer → Business logic (Borrowing, Buying, Auth)
+- Repository Layer → Data storage and management
+- Model Layer → Core entities (User, Book, etc.)
+
+### GG
