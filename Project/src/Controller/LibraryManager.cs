@@ -28,7 +28,7 @@ namespace Project.src.Controller
 
         public void AddItem(User user, LibraryItem book)
         {
-            if (!_authoService.CanManage(user))//Check if the user has permission to add items
+            if (!_authoService.CanControl(user))//Check if the user has permission to add items
             {
                 Console.WriteLine("You do not have permission to add books.");
                 return;
@@ -38,7 +38,7 @@ namespace Project.src.Controller
 
         public void UpdateItem(User admin, int id, LibraryItem updatedBook)
         {
-            if (!_authoService.CanManage(admin))//Check if the user has permission to update items
+            if (!_authoService.CanControl(admin))//Check if the user has permission to update items
             {
                 
                 Console.WriteLine("You do not have permission to update books.");
@@ -50,7 +50,7 @@ namespace Project.src.Controller
 
         public void DeleteItem(User user, int id)
         {
-            if (!_authoService.CanManage(user))//Check if the user has permission to delete items
+            if (!_authoService.CanControl(user))//Check if the user has permission to delete items
             {
                 
                 Console.WriteLine("You do not have permission to delete books.");

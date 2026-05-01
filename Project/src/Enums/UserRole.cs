@@ -7,6 +7,7 @@ namespace Project.src.Enums
     public enum UserRole
     {
         User,
-        Admin
+        Admin,
+        Employee
     }
 }

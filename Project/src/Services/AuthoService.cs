@@ -13,15 +13,19 @@ namespace Project.src.Services
             return user.Role == UserRole.Admin;
         }
         
-        
+        public bool CanControl(User user)
+        {
+            return  user.Role==UserRole.Employee;
+        }
+
         public bool CanBuy(User user)
         {
-            return user.Role == UserRole.User ;
+            return user.Role == UserRole.User || user.Role == UserRole.Employee;
         }
 
         public bool CanBorrow(User user)
         {
-            return user.Role == UserRole.User;
+            return user.Role == UserRole.User || user.Role == UserRole.Employee;
         }
 
         

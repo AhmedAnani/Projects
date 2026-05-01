@@ -1,0 +1,3 @@
+Book|1|C# Basics|true|John|Learn Programming|Science
+EBook|2|AI Future|true|Sara|Future Tech|Science|2MB
+Magazine|3|Tech Today|true
