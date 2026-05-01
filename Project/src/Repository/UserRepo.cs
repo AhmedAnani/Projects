@@ -41,6 +41,7 @@ namespace Project.src.Repository
 
             }
             _users.Remove(user);
+            Console.WriteLine($"{user.Name} Deleted Successfully.");
         }
 
         public void UpdateUser(int userId, User userUpdate)
@@ -49,7 +50,7 @@ namespace Project.src.Repository
 
             if (existingUser == null)
             {
-                Console.WriteLine("User not found.");
+                Console.WriteLine("User not Found.");
                 return;
             }
 
@@ -59,12 +60,21 @@ namespace Project.src.Repository
                 existingUser.Email = userUpdate.Email;
                 existingUser.Role = userUpdate.Role;
 
-                Console.WriteLine($"User {existingUser.Name} updated successfully.");
+                Console.WriteLine($"User {existingUser.Name} Updated Successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Update failed: {ex.Message}");
+                Console.WriteLine($"Update Failed: {ex.Message}");
             }
+        }
+
+        public bool CheckItem(int id)
+        {
+            var DeleteItem = _users.Find(i => i.Id == id);
+            if (DeleteItem == null)
+                return false;
+
+            return true;
         }
     }
     
