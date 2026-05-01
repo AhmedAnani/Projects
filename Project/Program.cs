@@ -59,7 +59,7 @@ class Program
                 switch (choice)
                 {
                     case "1":
-                        if (!authService.CanManage(currentUser))
+                        if (!authService.CanControl(currentUser))
                         {
                             Console.WriteLine("Access Denied.");
                             break;
