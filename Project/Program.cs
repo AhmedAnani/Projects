@@ -22,6 +22,7 @@ class Program
 
         var admin = new User(1, "Aya Hassan", "aya@ischool.com", UserRole.Admin);
         var user = new User(2, "Yasser", "yas@ischool.com", UserRole.User);
+        var employee=new User(3,"em","email@ishc.com",UserRole.Employee);
 
         userService.AddUser(admin, admin);
         userService.AddUser(user, admin);
@@ -33,7 +34,7 @@ class Program
             repo.AddItem(item);
         }
 
-        var currentUser = admin; // change to user to test permissions
+        var currentUser = employee; // change to user to test permissions
 
         string choice;
         do
@@ -189,7 +190,8 @@ class Program
                                 manager.AddItem(currentUser, new Magazine(id, title, available));
                                 break;
 
-                            case TypesOfItems.Book | TypesOfItems.EBook:
+                            case TypesOfItems.Book:
+                            case TypesOfItems.EBook:
                                 Console.Write("Author: ");
                                 string author = Console.ReadLine() ?? "";
 
@@ -217,6 +219,8 @@ class Program
                                         new EBook(id, title, available, author, desc, category, fileSize));
                                 }
                                 LogAction(currentUser, $"Added {itemType} with ID={id}, Title={title}");
+                                break;
+                            default:
                                 break;
                         }
 
@@ -255,7 +259,8 @@ class Program
                                 manager.UpdateItem(currentUser, itemId, new Magazine(itemId, updateTitle, updateAvailable));
                                 break;
 
-                            case TypesOfItems.Book | TypesOfItems.EBook:
+                            case TypesOfItems.Book:
+                            case TypesOfItems.EBook:
                                 Console.Write("Author: ");
                                 string updateAuthor = Console.ReadLine() ?? "";
 
@@ -284,7 +289,10 @@ class Program
                                 }
                                 LogAction(currentUser,$"Updated Item ID={itemId} ");
                                 break;
+                            default:
+                                break;
                         }
+                        SaveItems(repo.GetAllItems());
                         break;
                     case "9":
                         if (!authService.CanControl(currentUser)){
