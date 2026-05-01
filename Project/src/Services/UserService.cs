@@ -21,7 +21,7 @@ namespace Project.src.Services
 
         public void AddUser(User user, User admin)
         {
-            if (_authoService.CanManage(admin))
+            if (_authoService.CanManage(admin))//Check user can add user or not
             {
                 _userRepo.AddUser(user);
             }
@@ -33,7 +33,7 @@ namespace Project.src.Services
 
         public void UpdateUser(User user, User admin, int userId)
         {
-            if (_authoService.CanManage(admin))
+            if (_authoService.CanManage(admin))//Check user can update user details or not
             {
                 _userRepo.UpdateUser(userId , user);
             }
@@ -44,7 +44,7 @@ namespace Project.src.Services
         }
         public void DeleteUser(int userId, User admin)
         {
-            if(_authoService.CanManage(admin))
+            if(_authoService.CanManage(admin))//Check user can Delte or not
             {
                 _userRepo.DeleteUser(userId);
             }
@@ -55,7 +55,7 @@ namespace Project.src.Services
         }
         public List<User> GetUsers(User admin)
         {
-            if(!_authoService.CanManage(admin))
+            if(!_authoService.CanManage(admin))//Check user can view all users or not
             {
                 Console.WriteLine("You do not have permission to view all users.");
                 return new List<User>();

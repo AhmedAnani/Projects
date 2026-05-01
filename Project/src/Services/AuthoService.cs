@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Project.src.Services
 {
+    // That Class for Authorization  
     public class AuthoService
     {
         public bool CanManage(User user)

@@ -42,20 +42,25 @@ class Program
             Console.Clear();
             Console.WriteLine("=== Library Management System ===");
             
-            Console.WriteLine("1. View All Items");
-            Console.WriteLine("2. Search for Item (by ID)");
-            Console.WriteLine("3. Buy an Item");
-            Console.WriteLine("4. Borrow a Book");
-            Console.WriteLine("5. Return a Book");
+                Console.WriteLine("1. View All Items");
+            if (authService.CanBuy(currentUser))
+            {
+                Console.WriteLine("2. Search for Item (by ID)");
+                Console.WriteLine("3. Buy an Item");
+                Console.WriteLine("4. Borrow a Book");
+                Console.WriteLine("5. Return a Book");
+            }
             Console.WriteLine("6. Exit");
-            if (authService.CanControl(currentUser))
+            if (authService.CanControl(currentUser))//if employee 
             {
                 Console.WriteLine("7. Add New Item");
                 Console.WriteLine("8. Update  Item");
-                Console.WriteLine("9. Delete Item");
+
             }
-            if (authService.CanManage(currentUser))
+            
+            if (authService.CanManage(currentUser))// if admin
             {
+                Console.WriteLine("9. Delete Item");
                 Console.WriteLine("10. Add a User");
                 Console.WriteLine("11. Update User info");
                 Console.WriteLine("12. Delete User");
@@ -75,12 +80,12 @@ class Program
                         break;
                     case "2":
                         Console.Write("Enter ID: ");
-                        if (int.TryParse(Console.ReadLine(), out int searchId))
-                        {
-                            var item = repo.GetAllItems().FirstOrDefault(i => i.Id == searchId);
-                            if (item != null) item.displayInfo();
-                            else Console.WriteLine("Not found.");
-                        }
+                        int.TryParse(Console.ReadLine(), out int searchId);
+                        var item = repo.GetAllItems().FirstOrDefault(i => i.Id == searchId);
+                            if (item == null) Console.WriteLine("Not found.");
+
+                        item.displayInfo();
+                            
                         break;
                     case "3":
                         if (!authService.CanBuy(currentUser))
@@ -295,7 +300,7 @@ class Program
                         SaveItems(repo.GetAllItems());
                         break;
                     case "9":
-                        if (!authService.CanControl(currentUser)){
+                        if (!authService.CanManage(currentUser)){
                             Console.WriteLine("Access Denied.");
                             break;
                         }
