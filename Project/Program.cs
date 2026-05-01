@@ -5,6 +5,7 @@ using Project.src.Models;
 using Project.src.Repository;
 using Project.src.Services;
 using System;
+using System.ComponentModel.DataAnnotations;
 using testing.src.Models;
 
 class Program
@@ -39,17 +40,27 @@ class Program
         {
             Console.Clear();
             Console.WriteLine("=== Library Management System ===");
-            Console.WriteLine("1. Add New Item (Admin Only)");
-            Console.WriteLine("2. View All Items");
-            Console.WriteLine("3. Search for Item (by ID)");
+            
+            Console.WriteLine("1. View All Items");
+            Console.WriteLine("2. Search for Item (by ID)");
+            Console.WriteLine("3. Buy an Item");
             Console.WriteLine("4. Borrow a Book");
-            Console.WriteLine("5. Buy an Item");
-            Console.WriteLine("6. Return a Book");
-            Console.WriteLine("7. Add a User");
-            Console.WriteLine("8. Update User info");
-            Console.WriteLine("9. Delete User");
-            Console.WriteLine("10. List Users");
-            Console.WriteLine("11. Exit");
+            Console.WriteLine("5. Return a Book");
+            Console.WriteLine("6. Exit");
+            if (authService.CanControl(currentUser))
+            {
+                Console.WriteLine("7. Add New Item");
+                Console.WriteLine("8. Update  Item");
+                Console.WriteLine("9. Delete Item");
+            }
+            if (authService.CanManage(currentUser))
+            {
+                Console.WriteLine("10. Add a User");
+                Console.WriteLine("11. Update User info");
+                Console.WriteLine("12. Delete User");
+                Console.WriteLine("13. List Users");
+            }
+           
             Console.Write("Enter your choice: ");
 
             choice = Console.ReadLine();
@@ -59,49 +70,9 @@ class Program
                 switch (choice)
                 {
                     case "1":
-                        if (!authService.CanControl(currentUser))
-                        {
-                            Console.WriteLine("Access Denied.");
-                            break;
-                        }
-
-                        Console.Write("Book ID: ");
-                        int.TryParse(Console.ReadLine(), out int id);
-
-                        Console.Write("Title: ");
-                        string title = Console.ReadLine() ?? "";
-
-                        Console.Write("Available (true/false): ");
-                        bool.TryParse(Console.ReadLine(), out bool available);
-
-                        Console.Write("Author: ");
-                        string author = Console.ReadLine() ?? "";
-
-                        Console.Write("Description: ");
-                        string desc = Console.ReadLine() ?? "";
-
-                        Console.WriteLine("Choose Category:");
-                        foreach (var c in Enum.GetValues(typeof(BookCategory)))
-                            Console.WriteLine($"{(int)c} - {c}");
-
-                        string catInput = Console.ReadLine() ?? "";
-                        Enum.TryParse(catInput, true, out BookCategory category);
-
-                        var newBook = new Book(id, title, available, author, desc, category);
-
-                        manager.AddItem(currentUser, newBook);
-
-                        // Save after add
-                        SaveItems(repo.GetAllItems());
-
-                        Console.WriteLine("Book added!");
-                        break;
-
-                    case "2":
                         Print(manager);
                         break;
-
-                    case "3":
+                    case "2":
                         Console.Write("Enter ID: ");
                         if (int.TryParse(Console.ReadLine(), out int searchId))
                         {
@@ -110,27 +81,7 @@ class Program
                             else Console.WriteLine("Not found.");
                         }
                         break;
-
-                    case "4":
-                        if (!authService.CanBorrow(currentUser))
-                        {
-                            Console.WriteLine("Access Denied.");
-                            break;
-                        }
-
-                        Console.Write("Enter Title: ");
-                        string borrowTitle = Console.ReadLine()?.ToLower() ?? "";
-
-                        var book = repo.GetAllItems()
-                            .FirstOrDefault(i => i.Title.ToLower() == borrowTitle);
-
-                        if (book != null)
-                            manager.BorrowItem(currentUser, book);
-                        else
-                            Console.WriteLine("Not found.");
-                        break;
-
-                    case "5":
+                    case "3":
                         if (!authService.CanBuy(currentUser))
                         {
                             Console.WriteLine("Access Denied.");
@@ -151,8 +102,25 @@ class Program
                         else
                             Console.WriteLine("Not available.");
                         break;
+                    case "4":
+                        if (!authService.CanBorrow(currentUser))
+                        {
+                            Console.WriteLine("Access Denied.");
+                            break;
+                        }
 
-                    case "6":
+                        Console.Write("Enter Title: ");
+                        string borrowTitle = Console.ReadLine()?.ToLower() ?? "";
+
+                        var book = repo.GetAllItems()
+                            .FirstOrDefault(i => i.Title.ToLower() == borrowTitle);
+
+                        if (book != null)
+                            manager.BorrowItem(currentUser, book);
+                        else
+                            Console.WriteLine("Not found.");
+                        break;
+                    case "5":
                         if (!authService.CanBorrow(currentUser))
                         {
                             Console.WriteLine("Access Denied.");
@@ -179,8 +147,157 @@ class Program
                         else
                             Console.WriteLine("Not found.");
                         break;
-
+                    case "6":
+                        // Save before exit
+                        SaveItems(repo.GetAllItems());
+                        Console.WriteLine("Goodbye!");
+                        break;
                     case "7":
+                        if (!authService.CanControl(currentUser))
+                        {
+                            Console.WriteLine("Access Denied.");
+                            break;
+                        }
+
+                        Console.WriteLine("Select item type:");
+                        foreach (var t in Enum.GetValues(typeof(TypesOfItems)))
+                            Console.WriteLine($"{(int)t} - {t}");
+
+                        string typeInput = Console.ReadLine() ?? "";
+                        if (!Enum.TryParse(typeInput, true, out TypesOfItems itemType))
+                        {
+                            Console.WriteLine("Invalid type.");
+                            break;
+                        }
+
+                        Console.Write("ID: ");
+                        int.TryParse(Console.ReadLine(), out int id);
+                        if (repo.CheckItem(id))
+                        {
+                            Console.WriteLine($"{itemType} Founded Insert Another Id.");
+                            break;
+                        }
+                        Console.Write("Title: ");
+                        string title = Console.ReadLine() ?? "";
+
+                        Console.Write("Available (true/false): ");
+                        bool.TryParse(Console.ReadLine(), out bool available);
+
+                        switch (itemType)
+                        {
+                            case TypesOfItems.Magazine:
+                                manager.AddItem(currentUser, new Magazine(id, title, available));
+                                break;
+
+                            case TypesOfItems.Book | TypesOfItems.EBook:
+                                Console.Write("Author: ");
+                                string author = Console.ReadLine() ?? "";
+
+                                Console.Write("Description: ");
+                                string desc = Console.ReadLine() ?? "";
+
+                                Console.WriteLine("Choose Category:");
+                                foreach (var c in Enum.GetValues(typeof(BookCategory)))
+                                    Console.WriteLine($"{(int)c} - {c}");
+
+                                string catInput = Console.ReadLine() ?? "";
+                                Enum.TryParse(catInput, true, out BookCategory category);
+
+                                if (itemType == TypesOfItems.Book)
+                                {
+                                    manager.AddItem(currentUser,
+                                        new Book(id, title, available, author, desc, category));
+                                }
+                                else
+                                {
+                                    Console.Write("File Size: ");
+                                    string fileSize = Console.ReadLine() ?? "";
+
+                                    manager.AddItem(currentUser,
+                                        new EBook(id, title, available, author, desc, category, fileSize));
+                                }
+                                LogAction(currentUser, $"Added {itemType} with ID={id}, Title={title}");
+                                break;
+                        }
+
+                        SaveItems(repo.GetAllItems());
+                        Console.WriteLine($"{itemType} added!");
+                        break;
+                    case "8":
+                        if (!authService.CanControl(currentUser)){
+                            Console.WriteLine("Access Denied.");
+                            break;
+                        }
+                        Console.Write("Item ID: ");
+                        int.TryParse(Console.ReadLine(), out int itemId);
+
+                        var existingItem = repo.GetAllItems().FirstOrDefault(i => i.Id == itemId);
+
+                        if (existingItem == null)
+                        {
+                            Console.WriteLine("Item not found.");
+                            break;
+                        }
+
+
+                        if (existingItem is Book) itemType = TypesOfItems.Book;
+                        else if (existingItem is EBook) itemType = TypesOfItems.EBook;
+                        else itemType = TypesOfItems.Magazine;
+                        Console.Write("Title: ");
+                        string updateTitle = Console.ReadLine() ?? "";
+
+                        Console.Write("Available (true/false): ");
+                        bool.TryParse(Console.ReadLine(), out bool updateAvailable);
+
+                        switch (itemType)
+                        {
+                            case TypesOfItems.Magazine:
+                                manager.UpdateItem(currentUser, itemId, new Magazine(itemId, updateTitle, updateAvailable));
+                                break;
+
+                            case TypesOfItems.Book | TypesOfItems.EBook:
+                                Console.Write("Author: ");
+                                string updateAuthor = Console.ReadLine() ?? "";
+
+                                Console.Write("Description: ");
+                                string updateDesc = Console.ReadLine() ?? "";
+
+                                Console.WriteLine("Choose Category:");
+                                foreach (var c in Enum.GetValues(typeof(BookCategory)))
+                                    Console.WriteLine($"{(int)c} - {c}");
+
+                                string updateCatatogry = Console.ReadLine() ?? "";
+                                Enum.TryParse(updateCatatogry, true, out BookCategory UpdateCategory);
+
+                                if (itemType == TypesOfItems.Book)
+                                {
+                                    manager.UpdateItem(currentUser, itemId,
+                                        new Book(itemId, updateTitle, updateAvailable, updateAuthor, updateDesc, UpdateCategory));
+                                }
+                                else
+                                {
+                                    Console.Write("File Size: ");
+                                    string UpdateFileSize = Console.ReadLine() ?? "";
+
+                                    manager.UpdateItem(currentUser, itemId,
+                                        new EBook(itemId, updateTitle, updateAvailable, updateAuthor, updateDesc, UpdateCategory, UpdateFileSize));
+                                }
+                                LogAction(currentUser,$"Updated Item ID={itemId} ");
+                                break;
+                        }
+                        break;
+                    case "9":
+                        if (!authService.CanControl(currentUser)){
+                            Console.WriteLine("Access Denied.");
+                            break;
+                        }
+                        Console.Write("Item ID: ");
+                        int.TryParse(Console.ReadLine(), out int DelteId);
+
+                        manager.DeleteItem(currentUser, DelteId);
+                        LogAction(currentUser,$"Deleted Item ID={DelteId}");
+                        break;
+                    case "10":
                         if (!authService.CanManage(currentUser))
                         {
                             Console.WriteLine("Access Denied.");
@@ -189,7 +306,11 @@ class Program
 
                         Console.Write("User ID: ");
                         int.TryParse(Console.ReadLine(), out int uid);
-
+                        if (userRepo.CheckItem(uid))
+                        {
+                            Console.WriteLine("User founded.");
+                            break;
+                        }
                         Console.Write("Name: ");
                         string uname = Console.ReadLine() ?? "";
 
@@ -204,9 +325,10 @@ class Program
                         Enum.TryParse(roleInput, true, out UserRole role);
 
                         userService.AddUser(new User(uid, uname, uemail, role), currentUser);
+                        LogAction(currentUser, $"Added User ID={uid}, Name={uname}, Role={role}");
                         break;
 
-                    case "8":
+                    case "11":
                         if (!authService.CanManage(currentUser))
                         {
                             Console.WriteLine("Access Denied.");
@@ -216,6 +338,11 @@ class Program
                         Console.Write("User ID: ");
                         int.TryParse(Console.ReadLine(), out int upId);
 
+                        if (!userRepo.CheckItem(upId))
+                        {
+                            Console.WriteLine("User not found.");
+                            break;
+                        }
                         Console.Write("Name: ");
                         string upName = Console.ReadLine() ?? "";
 
@@ -230,9 +357,10 @@ class Program
                         Enum.TryParse(upRoleInput, true, out UserRole upRole);
 
                         userService.UpdateUser(new User(upId, upName, upEmail, upRole), currentUser, upId);
+                        LogAction(currentUser, $"Updated User ID={upId}, Name={upName}");
                         break;
 
-                    case "9":
+                    case "12":
                         if (!authService.CanManage(currentUser))
                         {
                             Console.WriteLine("Access Denied.");
@@ -243,9 +371,16 @@ class Program
                         int.TryParse(Console.ReadLine(), out int delId);
 
                         userService.DeleteUser(delId, currentUser);
+                        LogAction(currentUser, $"Deleted User ID={delId}");
                         break;
 
-                    case "10":
+                    case "13":
+                        if (!authService.CanManage(currentUser))
+                        {
+                            Console.WriteLine("Access Denied.");
+                            break;
+
+                        }
                         var users = userService.GetUsers(currentUser);
                         foreach (var u in users)
                         {
@@ -253,11 +388,7 @@ class Program
                         }
                         break;
 
-                    case "11":
-                        // Save before exit
-                        SaveItems(repo.GetAllItems());
-                        Console.WriteLine("Goodbye!");
-                        break;
+                    
 
                     default:
                         Console.WriteLine("Invalid choice.");
@@ -340,5 +471,10 @@ class Program
         }
 
         File.WriteAllLines("items.txt", lines);
+    }
+    static void LogAction(User user, string action)
+    {
+        string logLine = $"{DateTime.Now} | User: {user.Name} ({user.Role}) | {action}";
+        File.AppendAllText("log.txt", logLine + Environment.NewLine);
     }
 }
