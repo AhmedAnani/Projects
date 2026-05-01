@@ -1,3 +1,5 @@
-Book|1|C# Basics|true|John|Learn Programming|Science
-EBook|2|AI Future|true|Sara|Future Tech|Science|2MB
-Magazine|3|Tech Today|true
+Book|1|c# basics|True|John|Learn Programming|Science
+EBook|2|ai future|True|Sara|Future Tech|Science|2MB
+Magazine|3|tech today|True
+Magazine|4|tot|False
+Book|5|ez|True|ahj|el sa7 da7 embo|RealWorld
