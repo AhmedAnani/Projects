@@ -26,7 +26,7 @@ class Program
 
         userService.AddUser(admin, admin);
         userService.AddUser(user, admin);
-
+        userService.AddUser(employee, admin);
         // Load items from file
         var loadedItems = LoadItems("items.txt");
         foreach (var item in loadedItems)
@@ -34,7 +34,7 @@ class Program
             repo.AddItem(item);
         }
 
-        var currentUser = employee; // change to user to test permissions
+        var currentUser = user ; // change to user to test permissions
 
         string choice;
         do
