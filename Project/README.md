@@ -43,4 +43,10 @@ A console-based Library Management System built in C# that demonstrates object-o
 - Saves changes automatically after updates
 - Simple structured format:
 
+### Logging System
+- All important actions
+- Adding items
+- Updating items
+- Deleting items
+- User management actions
 ### GG

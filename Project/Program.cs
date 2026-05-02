@@ -22,10 +22,11 @@ class Program
 
         var admin = new User(1, "Aya Hassan", "aya@ischool.com", UserRole.Admin);
         var user = new User(2, "Yasser", "yas@ischool.com", UserRole.User);
+        var employee=new User(3,"em","email@ishc.com",UserRole.Employee);
 
         userService.AddUser(admin, admin);
         userService.AddUser(user, admin);
-
+        userService.AddUser(employee, admin);
         // Load items from file
         var loadedItems = LoadItems("items.txt");
         foreach (var item in loadedItems)
@@ -33,7 +34,7 @@ class Program
             repo.AddItem(item);
         }
 
-        var currentUser = admin; // change to user to test permissions
+        var currentUser = user ; // change to user to test permissions
 
         string choice;
         do
@@ -41,20 +42,25 @@ class Program
             Console.Clear();
             Console.WriteLine("=== Library Management System ===");
             
-            Console.WriteLine("1. View All Items");
-            Console.WriteLine("2. Search for Item (by ID)");
-            Console.WriteLine("3. Buy an Item");
-            Console.WriteLine("4. Borrow a Book");
-            Console.WriteLine("5. Return a Book");
+                Console.WriteLine("1. View All Items");
+            if (authService.CanBuy(currentUser))
+            {
+                Console.WriteLine("2. Search for Item (by ID)");
+                Console.WriteLine("3. Buy an Item");
+                Console.WriteLine("4. Borrow a Book");
+                Console.WriteLine("5. Return a Book");
+            }
             Console.WriteLine("6. Exit");
-            if (authService.CanControl(currentUser))
+            if (authService.CanControl(currentUser))//if employee 
             {
                 Console.WriteLine("7. Add New Item");
                 Console.WriteLine("8. Update  Item");
-                Console.WriteLine("9. Delete Item");
+
             }
-            if (authService.CanManage(currentUser))
+            
+            if (authService.CanManage(currentUser))// if admin
             {
+                Console.WriteLine("9. Delete Item");
                 Console.WriteLine("10. Add a User");
                 Console.WriteLine("11. Update User info");
                 Console.WriteLine("12. Delete User");
@@ -74,12 +80,12 @@ class Program
                         break;
                     case "2":
                         Console.Write("Enter ID: ");
-                        if (int.TryParse(Console.ReadLine(), out int searchId))
-                        {
-                            var item = repo.GetAllItems().FirstOrDefault(i => i.Id == searchId);
-                            if (item != null) item.displayInfo();
-                            else Console.WriteLine("Not found.");
-                        }
+                        int.TryParse(Console.ReadLine(), out int searchId);
+                        var item = repo.GetAllItems().FirstOrDefault(i => i.Id == searchId);
+                            if (item == null) Console.WriteLine("Not found.");
+
+                        item.displayInfo();
+                            
                         break;
                     case "3":
                         if (!authService.CanBuy(currentUser))
@@ -189,7 +195,8 @@ class Program
                                 manager.AddItem(currentUser, new Magazine(id, title, available));
                                 break;
 
-                            case TypesOfItems.Book | TypesOfItems.EBook:
+                            case TypesOfItems.Book:
+                            case TypesOfItems.EBook:
                                 Console.Write("Author: ");
                                 string author = Console.ReadLine() ?? "";
 
@@ -217,6 +224,8 @@ class Program
                                         new EBook(id, title, available, author, desc, category, fileSize));
                                 }
                                 LogAction(currentUser, $"Added {itemType} with ID={id}, Title={title}");
+                                break;
+                            default:
                                 break;
                         }
 
@@ -255,7 +264,8 @@ class Program
                                 manager.UpdateItem(currentUser, itemId, new Magazine(itemId, updateTitle, updateAvailable));
                                 break;
 
-                            case TypesOfItems.Book | TypesOfItems.EBook:
+                            case TypesOfItems.Book:
+                            case TypesOfItems.EBook:
                                 Console.Write("Author: ");
                                 string updateAuthor = Console.ReadLine() ?? "";
 
@@ -284,10 +294,13 @@ class Program
                                 }
                                 LogAction(currentUser,$"Updated Item ID={itemId} ");
                                 break;
+                            default:
+                                break;
                         }
+                        SaveItems(repo.GetAllItems());
                         break;
                     case "9":
-                        if (!authService.CanControl(currentUser)){
+                        if (!authService.CanManage(currentUser)){
                             Console.WriteLine("Access Denied.");
                             break;
                         }
