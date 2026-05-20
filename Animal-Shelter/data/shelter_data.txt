@@ -1,0 +1,5 @@
+Dog|1|Casber|3|Available||Wolf|True|small
+Bird|2|lolo|5|Available||parrot|True|medium
+SmallAnimal|3|jacky|7|Available||rabbit|small|True
+Dog|4|toto|8|Available||german|True|madium
+SmallAnimal|5|koko|7|PendingAdoption|moamen|hamster|small|True
