@@ -1,9 +1,10 @@
 ﻿using animal_Shelter.UI;
-using AnimalShelter.src.Models;
+using Animal_Shelter_V2.src.Factory.Interfaces;
+using Animal_Shelter_V2.src.Models.implementation;
 
-namespace animal_Shelter.Factory
+namespace Animal_Shelter_V2.src.Factory.Implementations
 {
-    public class AnimalFactory
+    public class AnimalFactory : IAnimalFactory
     {
 
         public static Dog BuildDog(int id)

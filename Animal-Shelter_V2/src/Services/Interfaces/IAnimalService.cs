@@ -1,8 +1,9 @@
-﻿using AnimalShelter.src.Models;
+﻿using Animal_Shelter_V2.GlobalFiles;
+using Animal_Shelter_V2.src.Models.implementation;
 using System.Collections.Generic;
 
 
-namespace animal_Shelter.Services
+namespace Animal_Shelter_V2.src.Services.Interface
 {
     public interface IAnimalService
     {

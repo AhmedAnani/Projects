@@ -1,9 +1,11 @@
-﻿using AnimalShelter.src.Models;
+﻿using Animal_Shelter_V2.GlobalFiles;
+using Animal_Shelter_V2.src.Models.implementation;
+using Animal_Shelter_V2.src.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace animal_Shelter.Repos
+namespace Animal_Shelter_V2.src.Repositories.Implementations
 {
     public class AnimalManager : IAnimalRepository
     {

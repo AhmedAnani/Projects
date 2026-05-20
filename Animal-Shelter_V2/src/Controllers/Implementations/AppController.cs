@@ -1,12 +1,14 @@
 ﻿using animal_Shelter.Repos;
 using animal_Shelter.UI;
-using AnimalShelter.src.Models;
 using AnimalShelter.src.UI;
-using animal_Shelter.Services;
 using System;
-namespace AnimalShelter.src.Controllers
+using Animal_Shelter_V2.src.Services.Interface;
+using Animal_Shelter_V2.src.Models.implementation;
+using Animal_Shelter_V2.GlobalFiles;
+using Animal_Shelter_V2.src.Controllers.Interfaces;
+namespace Animal_Shelter_V2.src.Controllers.Implementations
 {
-    public sealed class AppController
+    public sealed class AppController : IAppController
     {
         private readonly IAnimalService _service;
 

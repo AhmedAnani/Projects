@@ -1,5 +1,6 @@
-using animal_Shelter.Repos;
 using animal_Shelter.Services;
+using Animal_Shelter_V2.src.Repositories.Interfaces;
+using Animal_Shelter_V2.src.Services.Interface;
 using AnimalShelter.src.Controllers;
 using AnimalShelter.src.Repos;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,8 @@ using Microsoft.Extensions.Hosting;
 // Add services to the container.
 
 
- //builder.Services.AddDbContext<AppDBContext>(d =>
- //   d.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<AppDBContext>(d =>
+//   d.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //var app = builder.Build();
 
@@ -20,7 +21,7 @@ using Microsoft.Extensions.Hosting;
 // 1. Gets the current running directory (bin/Debug/netX.0/)
 // 2. Uses @"..\..\..\" to step up 3 folder levels to your project root
 // 3. Combines it with the data folder and file name
- string DataFile = Path.GetFullPath(
+string DataFile = Path.GetFullPath(
     Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\data\shelter_data.txt")
 );
 

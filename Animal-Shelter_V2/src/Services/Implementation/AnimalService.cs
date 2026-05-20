@@ -1,11 +1,13 @@
-﻿using animal_Shelter.Factory;
-using animal_Shelter.Repos;
-using AnimalShelter.src.Models;
+﻿using Animal_Shelter_V2.GlobalFiles;
+using Animal_Shelter_V2.src.Factory.Implementations;
+using Animal_Shelter_V2.src.Models.implementation;
+using Animal_Shelter_V2.src.Repositories.Interfaces;
+using Animal_Shelter_V2.src.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace animal_Shelter.Services
+namespace Animal_Shelter_V2.src.Services.Implementation
 {
     public class AnimalService : IAnimalService
     {

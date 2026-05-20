@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Animal_Shelter_V2.GlobalFiles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AnimalShelter.src.Models
+namespace Animal_Shelter_V2.src.Models.implementation
 {
     // Represents a small animal (rabbit, hamster, guinea pig, etc.)
     public sealed class SmallAnimal : Animal

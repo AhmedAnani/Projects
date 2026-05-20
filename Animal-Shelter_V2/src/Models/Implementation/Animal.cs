@@ -1,7 +1,9 @@
+using Animal_Shelter_V2.GlobalFiles;
+using Animal_Shelter_V2.src.Models.Interface;
 using System;
 using System.Text;
 
-namespace AnimalShelter.src.Models
+namespace Animal_Shelter_V2.src.Models.implementation
 {
     public abstract class Animal : ICareRecord, IAdoptable
     {

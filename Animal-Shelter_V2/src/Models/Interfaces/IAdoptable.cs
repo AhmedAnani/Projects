@@ -1,4 +1,4 @@
-namespace AnimalShelter.src.Models
+namespace Animal_Shelter_V2.src.Models.Interface
 {
     //Animal that can be adopted
     public interface IAdoptable
