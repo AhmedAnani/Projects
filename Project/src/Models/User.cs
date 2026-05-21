@@ -57,5 +57,6 @@ namespace Project.src.Models
 
         //Mapping Relationship between User and PurchaseRecord (1:many)
         public ICollection<PurchaseRecord> PurchaseRecords { get; set; } = new List<PurchaseRecord>();
+        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
     }
 }

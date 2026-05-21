@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Project.src.Context;
+using Project.src.Models;
 
 #nullable disable
 
@@ -105,6 +105,40 @@ namespace Project.Migrations
                     b.HasDiscriminator<string>("LibraryItemType").HasValue("LibraryItem");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Project.src.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Channel")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Project.src.Models.PurchaseRecord", b =>
@@ -242,6 +276,17 @@ namespace Project.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Project.src.Models.Notification", b =>
+                {
+                    b.HasOne("Project.src.Models.User", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Project.src.Models.PurchaseRecord", b =>
                 {
                     b.HasOne("Project.src.Models.LibraryItem", "LibraryItem")
@@ -276,6 +321,8 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.src.Models.User", b =>
                 {
                     b.Navigation("BorrowRecords");
+
+                    b.Navigation("Notifications");
 
                     b.Navigation("PurchaseRecords");
                 });

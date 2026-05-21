@@ -12,8 +12,8 @@ using Project.src.Models;
 namespace Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260521180757_CreateUserTableWithRelationToBorrowRecordTable")]
-    partial class CreateUserTableWithRelationToBorrowRecordTable
+    [Migration("20260521212321_add-notification")]
+    partial class addnotification
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,6 +110,40 @@ namespace Project.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("Project.src.Models.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Channel")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Project.src.Models.PurchaseRecord", b =>
                 {
                     b.Property<int>("Id")
@@ -130,6 +164,8 @@ namespace Project.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("LibraryItemId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("PurchaseRecords");
                 });
@@ -243,6 +279,17 @@ namespace Project.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Project.src.Models.Notification", b =>
+                {
+                    b.HasOne("Project.src.Models.User", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Project.src.Models.PurchaseRecord", b =>
                 {
                     b.HasOne("Project.src.Models.LibraryItem", "LibraryItem")
@@ -251,7 +298,15 @@ namespace Project.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Project.src.Models.User", "User")
+                        .WithMany("PurchaseRecords")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("LibraryItem");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Project.src.Models.Category", b =>
@@ -269,6 +324,10 @@ namespace Project.Migrations
             modelBuilder.Entity("Project.src.Models.User", b =>
                 {
                     b.Navigation("BorrowRecords");
+
+                    b.Navigation("Notifications");
+
+                    b.Navigation("PurchaseRecords");
                 });
 #pragma warning restore 612, 618
         }

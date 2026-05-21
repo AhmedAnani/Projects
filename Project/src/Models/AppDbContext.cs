@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Project.src.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.src.Context
+namespace Project.src.Models
 {
     public class AppDbContext:DbContext
     {
@@ -28,10 +27,13 @@ namespace Project.src.Context
                 .HasValue<EBook>("EBook")
                 .HasValue<Magazine>("Magazine");
 
+
             // Configuration for User  --> Ensure email is unique
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+            modelBuilder.Entity<Notification>()
+                .HasQueryFilter(n => !n.IsDeleted);
         }
 
         // DbSets
@@ -43,5 +45,6 @@ namespace Project.src.Context
         public DbSet<BorrowRecord> BorrowRecords { get; set; }
         public DbSet<PurchaseRecord> PurchaseRecords { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
     }
 }
