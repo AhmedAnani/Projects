@@ -51,7 +51,7 @@ namespace Project.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BorrowRecords");
+                    b.ToTable("BorrowRecords", (string)null);
                 });
 
             modelBuilder.Entity("Project.src.Models.Category", b =>
@@ -69,7 +69,7 @@ namespace Project.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Project.src.Models.LibraryItem", b =>
@@ -100,7 +100,7 @@ namespace Project.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("LibraryItems");
+                    b.ToTable("LibraryItems", (string)null);
 
                     b.HasDiscriminator<string>("LibraryItemType").HasValue("LibraryItem");
 
@@ -138,7 +138,7 @@ namespace Project.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Project.src.Models.PurchaseRecord", b =>
@@ -164,7 +164,7 @@ namespace Project.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PurchaseRecords");
+                    b.ToTable("PurchaseRecords", (string)null);
                 });
 
             modelBuilder.Entity("Project.src.Models.User", b =>
@@ -193,7 +193,7 @@ namespace Project.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Project.src.Models.Book", b =>

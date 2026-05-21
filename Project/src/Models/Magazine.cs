@@ -1,15 +1,13 @@
 ﻿using Project.src.Enums;
 using Project.src.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.src.Models
 {
     public class Magazine : LibraryItem, IBuyable
     {
-        [NotMapped]
         public override ItemType ItemType => ItemType.Magazine;
 
-        // Parameterless constructor for EF Core
+        //Parameterless constructor for EF Core
         protected Magazine() { }
 
         public Magazine(string title, int categoryId)
@@ -29,7 +27,7 @@ namespace Project.src.Models
         public void BuyItem()
         {
             if (IsAvailable)
-                Status = ItemStatus.Sold;
+                MarkAsSold();
         }
     }
 }

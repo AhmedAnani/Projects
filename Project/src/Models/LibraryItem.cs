@@ -6,29 +6,17 @@ namespace Project.src.Models
 {
     public abstract class LibraryItem
     {
-        private string _title = string.Empty;
-
         [Key]
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         [Required]
         [MaxLength(200)]
-        public string Title
-        {
-            get => _title;
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Title cannot be empty.");
+        public string Title { get; private set; } = string.Empty;
 
-                _title = value.Trim();
-            }
-        }
-
-        public ItemStatus Status { get; set; } = ItemStatus.Available;
+        public ItemStatus Status { get; private set; } = ItemStatus.Available;
 
         [ForeignKey("Category")]
-        public int CategoryId { get; set; }
+        public int CategoryId { get; private set; }
 
         [NotMapped]
         public bool IsAvailable => Status == ItemStatus.Available;
@@ -38,23 +26,61 @@ namespace Project.src.Models
 
         public abstract void DisplayInfo();
 
-        // Parameterless constructor for EF Core
+        //Prameterless constructor for EF Core
         protected LibraryItem() { }
 
         protected LibraryItem(string title, int categoryId)
         {
-            Title = title;
+            Rename(title);
+            ChangeCategory(categoryId);
+        }
+
+        //Methods that handel Encapsulations in the EF core
+        public void Rename(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+                throw new ArgumentException("Title cannot be empty.");
+
+            Title = title.Trim();
+        }
+
+        public void ChangeCategory(int categoryId)
+        {
+            if (categoryId <= 0)
+                throw new ArgumentException("Category id must be positive.");
+
             CategoryId = categoryId;
         }
 
+        public void MarkAsAvailable()
+        {
+            Status = ItemStatus.Available;
+        }
+
+        public void MarkAsBorrowed()
+        {
+            Status = ItemStatus.Borrowed;
+        }
+
+        public void MarkAsSold()
+        {
+            Status = ItemStatus.Sold;
+        }
+
+        public void MarkAsRemoved()
+        {
+            Status = ItemStatus.Removed;
+        }
+
+        //Navigational properties
 
         // Navigation property for mapping the relationship with Category (1:many)
-        public Category? Category { get; set; }
+        public Category? Category { get; private set; }
 
         //Mapping Relationship between BorrowRecord and LibraryItem (1:many)
-        public ICollection<BorrowRecord> BorrowRecords { get; set; } = new List<BorrowRecord>();
+        public ICollection<BorrowRecord> BorrowRecords { get; private set; } = new List<BorrowRecord>();
 
         // Mapping Relationship between PurchaseRecord and LibraryItem (1:many)
-        public ICollection<PurchaseRecord> PurchaseRecords { get; set; } = new List<PurchaseRecord>();
+        public ICollection<PurchaseRecord> PurchaseRecords { get; private set; } = new List<PurchaseRecord>();
     }
 }

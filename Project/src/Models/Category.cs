@@ -4,34 +4,30 @@ namespace Project.src.Models
 {
     public class Category
     {
-        private string _name = string.Empty;
-
         [Key]
-        public int Id { get; set; }
-        
-        
-        [MaxLength(100)]
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Category name cannot be empty.");
+        public int Id { get; private set; }
 
-                _name = value.Trim();
-            }
-        }
+        [MaxLength(100)]
+        public string Name { get; private set; } = string.Empty;
 
         // Navigation property for mapping the relationship with LibraryItem (1:many)
-        public ICollection<LibraryItem> LibraryItems { get; set; } = new List<LibraryItem>();
+        public ICollection<LibraryItem> LibraryItems { get; private set; } = new List<LibraryItem>();
 
         // Parameterless constructor for EF Core
         protected Category() { }
 
         public Category(string name)
         {
-            Name = name;
+            Rename(name);
+        }
+
+        // Method to rename the category with validation (EF Core mapping Encapsulation)
+        public void Rename(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Category name cannot be empty.");
+
+            Name = name.Trim();
         }
     }
 }

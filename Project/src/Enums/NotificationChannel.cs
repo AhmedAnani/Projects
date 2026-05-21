@@ -9,6 +9,6 @@ namespace Project.src.Enums
     public enum NotificationChannel
     {
         SMS,
-         Email,
+        Email,
     }
 }

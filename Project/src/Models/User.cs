@@ -5,58 +5,54 @@ namespace Project.src.Models
 {
     public class User
     {
-        private string _name = string.Empty;
-        private string _email = string.Empty;
-
         [Key]
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         [Required]
         [MaxLength(100)]
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentException("Name cannot be empty.");
-
-                _name = value.Trim();
-            }
-        }
-
+        public string Name { get; private set; } = string.Empty;
+       
         [MaxLength(200)]
-        public string Email
-        {
-            get => _email;
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value) || !value.Contains("@"))
-                    throw new ArgumentException("Invalid email format.");
+        public string Email { get; private set; } = string.Empty;
 
-                _email = value.Trim();
-            }
-        }
+        public UserRole Role { get; private set; }
 
-        public UserRole Role { get; set; }
-
-        // Parameterless constructor for EF Core
+        //Parameterless constructor for EF Core
         protected User() { }
 
         public User(string name, string email, UserRole role)
         {
-            Name = name;
-            Email = email;
+            UpdateProfile(name, email);
+            ChangeRole(role);
+        }
+
+        //Methods that handel Encapsulations in the EF core
+        public void UpdateProfile(string name, string email)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name cannot be empty.");
+
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
+                throw new ArgumentException("Invalid email format.");
+
+            Name = name.Trim();
+            Email = email.Trim();
+        }
+
+        public void ChangeRole(UserRole role)
+        {
+            if (!Enum.IsDefined(typeof(UserRole), role))
+                throw new ArgumentException("Invalid user role.");
+
             Role = role;
         }
 
-        //Navigation properties
+        //Navigational properties 
 
-        //Mapping Relationship between User and BorrowRecord (1:many)
-        public ICollection<BorrowRecord> BorrowRecords { get; set; } = new List<BorrowRecord>();
+        // Navigation Property to mapp Relationship with BorrowRecord(1:many)
+        public ICollection<BorrowRecord> BorrowRecords { get; private set; } = new List<BorrowRecord>();
 
-        //Mapping Relationship between User and PurchaseRecord (1:many)
-        public ICollection<PurchaseRecord> PurchaseRecords { get; set; } = new List<PurchaseRecord>();
-        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+        // Navigation Property to mapp Relationship with PurchaseRecords(1:many)
+        public ICollection<PurchaseRecord> PurchaseRecords { get; private set; } = new List<PurchaseRecord>();
     }
 }

@@ -1,15 +1,13 @@
 ﻿using Project.src.Enums;
 using Project.src.Interfaces;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.src.Models
 {
     public class Book : BookItem, IBorrowable, IBuyable
     {
-        [NotMapped]
         public override ItemType ItemType => ItemType.Book;
 
-        // Parameterless constructor for EF Core
+        //Parameterless constructor for EF Core
         protected Book() { }
 
         public Book(string title, int categoryId, string author, string description)
@@ -22,20 +20,20 @@ namespace Project.src.Models
             if (!IsAvailable)
                 return false;
 
-            Status = ItemStatus.Borrowed;
+            MarkAsBorrowed();
             return true;
         }
 
         public void ReturnItem()
         {
             if (Status == ItemStatus.Borrowed)
-                Status = ItemStatus.Available;
+                MarkAsAvailable();
         }
 
         public void BuyItem()
         {
             if (IsAvailable)
-                Status = ItemStatus.Sold;
+                MarkAsSold();
         }
     }
 }
