@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.src.Enums
+namespace Project.src.Interfaces
 {
-    public enum TypesOfItems
+    public interface IBuyable
     {
-        Book,
-        EBook,
-        Magazine
+        void BuyItem();
     }
 }
