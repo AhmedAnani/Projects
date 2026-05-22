@@ -16,33 +16,30 @@ namespace Project.src.Models
         protected BookItem(string title, int categoryId, string author, string description)
             : base(title, categoryId)
         {
-            ChangeAuthor(author);
-            ChangeDescription(description);
+            UpdateBookDetails(author, description);
         }
 
         //Method to handel Encapsulations in the EF core
-
-        public void ChangeAuthor(string author)
+        public void UpdateBookDetails(string author, string description)
         {
             if (string.IsNullOrWhiteSpace(author))
                 throw new ArgumentException("Author cannot be empty.");
 
             Author = author.Trim();
-        }
-
-        public void ChangeDescription(string description)
-        {
             Description = description?.Trim() ?? string.Empty;
         }
-        public override void DisplayInfo()
+
+        public override  string DisplayInfo()
         {
-            Console.WriteLine($"Id: {Id}");
-            Console.WriteLine($"Type: {ItemType}");
-            Console.WriteLine($"Title: {Title}");
-            Console.WriteLine($"Author: {Author}");
-            Console.WriteLine($"Description: {Description}");
-            Console.WriteLine($"Category: {Category?.Name ?? "Not assigned"}");
-            Console.WriteLine($"Status: {Status}");
+            return $"Id: {Id}\n" +
+                   $"Type: {ItemType}\n" +
+                   $"Title: {Title}\n" +
+                   $"Author: {Author}\n" +
+                   $"Description: {Description}\n" +
+                   $"Category: {Category?.Name ?? "Not assigned"}\n" +
+                   $"Status: {Status}";
+
+           
         }
     }
 }

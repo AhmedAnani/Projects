@@ -15,6 +15,7 @@ namespace Project.src.Models
         {
         }
 
+
         public bool BorrowItem()
         {
             if (!IsAvailable)
@@ -34,6 +35,10 @@ namespace Project.src.Models
         {
             if (IsAvailable)
                 MarkAsSold();
+        }
+        public override string DisplayInfo()
+        {
+            return base.DisplayInfo();
         }
     }
 }

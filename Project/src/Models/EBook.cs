@@ -32,10 +32,9 @@ namespace Project.src.Models
             FileSize = fileSize.Trim();
         }
 
-        public override void DisplayInfo()
+        public override string  DisplayInfo()
         {
-            base.DisplayInfo();
-            Console.WriteLine($"File Size: {FileSize}");
+            return base.DisplayInfo() + $"\nFile Size: {FileSize}";
         }
 
         public void BuyItem()

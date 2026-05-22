@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Folder Include="src\Controller\" />
-    <Folder Include="src\Repository\" />
     <Folder Include="src\Services\" />
   </ItemGroup>
 

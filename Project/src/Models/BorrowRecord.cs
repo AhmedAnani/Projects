@@ -50,7 +50,10 @@ namespace Project.src.Models
 
         public double CalculateFine(double finePerDay)
         {
-            if (!IsReturned || ReturnedAt <= DueDate)
+            if (!IsReturned)
+                return 0;
+
+            if (ReturnedAt!.Value <= DueDate)
                 return 0;
 
             int daysLate = (ReturnedAt.Value - DueDate).Days;

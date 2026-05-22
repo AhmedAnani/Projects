@@ -32,6 +32,7 @@ namespace Project.src.Models
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+
             modelBuilder.Entity<Notification>()
                 .HasQueryFilter(n => !n.IsDeleted);
         }

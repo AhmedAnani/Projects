@@ -15,13 +15,14 @@ namespace Project.src.Models
         {
         }
 
-        public override void DisplayInfo()
+        public override string DisplayInfo()
         {
-            Console.WriteLine($"Id: {Id}");
-            Console.WriteLine($"Type: {ItemType}");
-            Console.WriteLine($"Title: {Title}");
-            Console.WriteLine($"Category: {Category?.Name ?? "Not assigned"}");
-            Console.WriteLine($"Status: {Status}");
+            return $"Id: {Id}\n" +
+                   $"Type: {ItemType}\n" +
+                   $"Title: {Title}\n" +
+                   $"Category: {Category?.Name ?? "Not assigned"}\n" +
+                   $"Status: {Status}";
+
         }
 
         public void BuyItem()

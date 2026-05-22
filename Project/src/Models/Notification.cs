@@ -34,7 +34,7 @@ namespace Project.src.Models
 
             UserId = userId;
             SetMessage(message);
-            Channel = channel;
+            ChangeChannel(channel);
             CreatedAt = DateTime.Now;
             IsSent = false;
             IsDeleted = false;

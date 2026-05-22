@@ -24,7 +24,7 @@ namespace Project.src.Models
         [NotMapped]
         public abstract ItemType ItemType { get; }
 
-        public abstract void DisplayInfo();
+        public abstract string DisplayInfo();
 
         //Prameterless constructor for EF Core
         protected LibraryItem() { }
