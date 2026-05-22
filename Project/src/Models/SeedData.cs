@@ -73,11 +73,31 @@ namespace Project.src.Data
                  new PurchaseRecord(ali.Id, book2.Id),
                  new PurchaseRecord(sara.Id, ebook1.Id)
              );
-            // ================= 8. NOTIFICATIONS =================
+         
+            var adminNotification = new Notification(
+            admin.Id,
+            "Welcome Admin 🎉",
+            NotificationChannel.Email
+            );
+            adminNotification.MarkAsSent();
+
+            var aliNotification = new Notification(
+                ali.Id,
+                "Your borrowed book is due soon",
+                NotificationChannel.SMS
+            );
+            aliNotification.MarkAsSent();
+
+            var saraNotification = new Notification(
+                sara.Id,
+                "New books added to library",
+                NotificationChannel.Email
+            );
+
             context.Notifications.AddRange(
-                new Notification { UserId = admin.Id, Message = "Welcome Admin 🎉", Channel = NotificationChannel.Email, CreatedAt = DateTime.Now.AddDays(-10), IsSent = true },
-                new Notification { UserId = ali.Id, Message = "Your borrowed book is due soon", Channel = NotificationChannel.SMS, CreatedAt = DateTime.Now.AddDays(-1), IsSent = true },
-                new Notification { UserId = sara.Id, Message = "New books added to library", Channel = NotificationChannel.Email, CreatedAt = DateTime.Now, IsSent = false }
+                adminNotification,
+                aliNotification,
+                saraNotification
             );
 
             // final save to persist all seeded data

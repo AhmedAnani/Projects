@@ -16,19 +16,24 @@ namespace Project.src.Models
         protected BookItem(string title, int categoryId, string author, string description)
             : base(title, categoryId)
         {
-            UpdateBookDetails(author, description);
+            ChangeAuthor(author);
+            ChangeDescription(description);
         }
 
         //Method to handel Encapsulations in the EF core
-        public void UpdateBookDetails(string author, string description)
+
+        public void ChangeAuthor(string author)
         {
             if (string.IsNullOrWhiteSpace(author))
                 throw new ArgumentException("Author cannot be empty.");
 
             Author = author.Trim();
-            Description = description?.Trim() ?? string.Empty;
         }
 
+        public void ChangeDescription(string description)
+        {
+            Description = description?.Trim() ?? string.Empty;
+        }
         public override void DisplayInfo()
         {
             Console.WriteLine($"Id: {Id}");

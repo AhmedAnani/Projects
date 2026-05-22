@@ -22,20 +22,25 @@ namespace Project.src.Models
 
         public User(string name, string email, UserRole role)
         {
-            UpdateProfile(name, email);
+            ChangeName(name);
+            ChangeEmail(email);
             ChangeRole(role);
         }
 
         //Methods that handel Encapsulations in the EF core
-        public void UpdateProfile(string name, string email)
+        public void ChangeName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name cannot be empty.");
 
+            Name = name.Trim();
+        }
+
+        public void ChangeEmail(string email)
+        {
             if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
                 throw new ArgumentException("Invalid email format.");
 
-            Name = name.Trim();
             Email = email.Trim();
         }
 
@@ -54,5 +59,8 @@ namespace Project.src.Models
 
         // Navigation Property to mapp Relationship with PurchaseRecords(1:many)
         public ICollection<PurchaseRecord> PurchaseRecords { get; private set; } = new List<PurchaseRecord>();
+
+        // Navigation Property to mapp Relationship with Notifications(1:many)
+        public ICollection<Notification> Notifications { get; private set; } = new List<Notification>();
     }
 }
