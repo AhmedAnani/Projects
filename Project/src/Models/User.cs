@@ -1,4 +1,5 @@
 ﻿using Project.src.Enums;
+using Project.src.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace Project.src.Models
@@ -30,26 +31,20 @@ namespace Project.src.Models
         //Methods that handel Encapsulations in the EF core
         public void ChangeName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name cannot be empty.");
-
-            Name = name.Trim();
+            //validates name then assigns it to the property
+            Name = ValidationHelper.CheckNotNullOrWhiteSpaceText(name, "Name cannot be empty.", nameof(name));
         }
 
         public void ChangeEmail(string email)
         {
-            if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
-                throw new ArgumentException("Invalid email format.");
-
-            Email = email.Trim();
+            //validates email then assigns it to the property
+            Email = ValidationHelper.CheckValidEmail(email, "Invalid email format.", nameof(email));
         }
 
         public void ChangeRole(UserRole role)
         {
-            if (!Enum.IsDefined(typeof(UserRole), role))
-                throw new ArgumentException("Invalid user role.");
-
-            Role = role;
+            //validates role then assigns it to the property
+            Role = ValidationHelper.CheckEnumValue(role, "Invalid user role.", nameof(role));
         }
 
         //Navigational properties 

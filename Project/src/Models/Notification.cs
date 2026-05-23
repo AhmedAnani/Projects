@@ -1,4 +1,5 @@
 ﻿using Project.src.Enums;
+using Project.src.Validations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -43,10 +44,8 @@ namespace Project.src.Models
         // Methods to handle encapsulation in EF Core
         public void SetMessage(string message)
         {
-            if (string.IsNullOrWhiteSpace(message))
-                throw new ArgumentException("Notification message cannot be empty.");
-
-            Message = message.Trim();
+            // Validate message then set it
+            Message = ValidationHelper.CheckNotNullOrWhiteSpaceText(message, "Message cannot be null or whitespace.", nameof(message));
         }
 
         public void MarkAsSent()
@@ -61,10 +60,8 @@ namespace Project.src.Models
 
         public void ChangeChannel(NotificationChannel channel)
         {
-            if (!Enum.IsDefined(typeof(NotificationChannel), channel))
-                throw new ArgumentException("Invalid notification channel.");
-
-            Channel = channel;
+            // Validate channel then set it
+            Channel = ValidationHelper.CheckEnumValue(channel, "Invalid notification channel.", nameof(channel));
         }
 
         public void SoftDelete()

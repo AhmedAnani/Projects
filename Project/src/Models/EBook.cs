@@ -1,5 +1,6 @@
 ﻿using Project.src.Enums;
 using Project.src.Interfaces;
+using Project.src.Validations;
 using System.ComponentModel.DataAnnotations;
 
 namespace Project.src.Models
@@ -23,13 +24,11 @@ namespace Project.src.Models
         //Method that handel Encapsulations in the EF core
         public void UpdateFileSize(string fileSize)
         {
-            if (string.IsNullOrWhiteSpace(fileSize))
-                throw new ArgumentException("File size cannot be empty.");
-
+            // Validate file size input before setting the property
             if (fileSize.Length > 500)
                 throw new ArgumentException("File size must be less than or equal to 500 characters.");
 
-            FileSize = fileSize.Trim();
+            FileSize = ValidationHelper.CheckNotNullOrWhiteSpaceText(fileSize, "File size cannot be null or whitespace.", nameof(fileSize));
         }
 
         public override string  DisplayInfo()

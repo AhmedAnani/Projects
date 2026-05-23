@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Project.src.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.src.Models
 {
@@ -22,11 +23,9 @@ namespace Project.src.Models
         //Method to handel Encapsulations in the EF core
         public void UpdateBookDetails(string author, string description)
         {
-            if (string.IsNullOrWhiteSpace(author))
-                throw new ArgumentException("Author cannot be empty.");
-
-            Author = author.Trim();
-            Description = description?.Trim() ?? string.Empty;
+            // Validate and set the Author and Description properties 
+            Author = ValidationHelper.CheckNotNullOrWhiteSpaceText(author, "Author cannot be null or whitespace.", nameof(author));
+            Description = ValidationHelper.CheckNotNullOrWhiteSpaceText(description, "Description cannot be null or whitespace.", nameof(description));
         }
 
         public override  string DisplayInfo()

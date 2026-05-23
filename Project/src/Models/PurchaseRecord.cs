@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Project.src.Validations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.src.Models
@@ -21,15 +22,9 @@ namespace Project.src.Models
 
         public PurchaseRecord(int userId, int libraryItemId)
         {
-            //Validation for the properties to ensure data integrity(Encapsulation inside the constructor)
-            if (userId <= 0)
-                throw new ArgumentException("User id must be positive.");
-
-            if (libraryItemId <= 0)
-                throw new ArgumentException("Library item id must be positive.");
-
-            UserId = userId;
-            LibraryItemId = libraryItemId;
+            //Validate UserId and LibraryItemId then assign values to properties
+            UserId = ValidationHelper.CheckPositiveInteger(userId, "User id must be greater than zero.", nameof(userId));
+            LibraryItemId = ValidationHelper.CheckPositiveInteger(libraryItemId, "Library item id must be greater than zero.", nameof(libraryItemId));
         }
 
         //Navigation Properties

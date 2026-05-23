@@ -1,4 +1,5 @@
 ﻿using Project.src.Enums;
+using Project.src.Validations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,18 +39,14 @@ namespace Project.src.Models
         //Methods that handel Encapsulations in the EF core
         public void Rename(string title)
         {
-            if (string.IsNullOrWhiteSpace(title))
-                throw new ArgumentException("Title cannot be empty.");
-
-            Title = title.Trim();
+            //validation for title then set the title property
+            Title = ValidationHelper.CheckNotNullOrWhiteSpaceText(title, "Title cannot be null or whitespace.", nameof(title));
         }
 
         public void ChangeCategory(int categoryId)
         {
-            if (categoryId <= 0)
-                throw new ArgumentException("Category id must be positive.");
-
-            CategoryId = categoryId;
+            //validation for categoryId then set the CategoryId property
+            CategoryId = ValidationHelper.CheckPositiveInteger(categoryId, "CategoryId must be greater than zero.", nameof(categoryId));
         }
 
         public void MarkAsAvailable()

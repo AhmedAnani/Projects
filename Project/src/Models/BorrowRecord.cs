@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Project.src.Validations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.src.Models
@@ -28,18 +29,13 @@ namespace Project.src.Models
 
         public BorrowRecord(int userId, int libraryItemId, DateTime dueDate)
         {
-            //Validation to ensure data integrity (Encapsulation inside the constructor)
-            if (userId <= 0)
-                throw new ArgumentException("User id must be positive.");
-
-            if (libraryItemId <= 0)
-                throw new ArgumentException("Library item id must be positive.");
-
+            // validate and set UserId, LibraryItemId, and DueDate
+     
             if (dueDate <= DateTime.Now)
                 throw new ArgumentException("Due date must be in the future.");
 
-            UserId = userId;
-            LibraryItemId = libraryItemId;
+            UserId = ValidationHelper.CheckPositiveInteger(userId, "User id must be greater than zero.", nameof(userId));
+            LibraryItemId = ValidationHelper.CheckPositiveInteger(libraryItemId, "Library item id must be greater than zero.", nameof(libraryItemId));
             DueDate = dueDate;
         }
 
@@ -53,7 +49,7 @@ namespace Project.src.Models
             if (!IsReturned)
                 return 0;
 
-            if (ReturnedAt!.Value <= DueDate)
+            if (!ReturnedAt.HasValue || ReturnedAt.Value <= DueDate)
                 return 0;
 
             int daysLate = (ReturnedAt.Value - DueDate).Days;

@@ -22,7 +22,7 @@ namespace Project.src.Repository
             if(entity == null)
                 throw new ArgumentNullException(nameof(entity));
             _context.Set<T>().Add(entity);
-                _context.SaveChanges();
+            _context.SaveChanges();
         }
         // i use Action<T> because Private set of some properties in the entity, so i can't assign value to them directly, but with Action<T> i can pass a lambda expression to update those properties.
         public void Update(int id, Action<T> updateAction)

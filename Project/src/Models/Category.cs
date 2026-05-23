@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Project.src.Validations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.src.Models
 {
@@ -24,10 +25,8 @@ namespace Project.src.Models
         // Method to rename the category with validation (EF Core mapping Encapsulation)
         public void Rename(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Category name cannot be empty.");
-
-            Name = name.Trim();
+            //Validates the name and sets the Name property
+            Name = ValidationHelper.CheckNotNullOrWhiteSpaceText(name, "Category name cannot be null or whitespace.", nameof(name));
         }
     }
 }
