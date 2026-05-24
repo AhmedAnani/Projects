@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Project.src.Enums;
+using Project.src.Interfaces;
 using Project.src.Models;
 
 namespace Project.src.Repositories
 {
-    public class LibraryItemRepository : GenericRepository<LibraryItem>
+    public class LibraryItemRepository : GenericRepository<LibraryItem>,ILibraryItemRepository
     {
         public LibraryItemRepository(AppDbContext context) : base(context)
         {
@@ -25,10 +26,7 @@ namespace Project.src.Repositories
                 .Include(li => li.Category)
                 .Where(li => li.Title.ToLower().Contains(searchText))
                 .ToList();
-
-            if (resultList.Count == 0)
-                throw new InvalidOperationException($"No library item found with title containing: {title}");
-
+ 
             return resultList;
         }
 
@@ -36,12 +34,10 @@ namespace Project.src.Repositories
         public IEnumerable<LibraryItem> GetAvailableItems()
         {
             var availableItems = _context.LibraryItems
+                .Include(li => li.Category)
                 .AsNoTracking()
                 .Where(li => li.Status == ItemStatus.Available)
                 .ToList();
-
-            if (availableItems.Count == 0)
-                throw new InvalidOperationException("No available library items found.");
 
             return availableItems;
         }
@@ -50,12 +46,10 @@ namespace Project.src.Repositories
         public IEnumerable<LibraryItem> GetItemsOrderedByTitle()
         {
             var orderedItems = _context.LibraryItems
+                .Include(li => li.Category)
                 .AsNoTracking()
                 .OrderBy(li => li.Title)
                 .ToList();
-
-            if (orderedItems.Count == 0)
-                throw new InvalidOperationException("No library items found.");
 
             return orderedItems;
         }
@@ -67,12 +61,10 @@ namespace Project.src.Repositories
                 throw new ArgumentException("Category id must be positive.", nameof(categoryId));
 
             var items = _context.LibraryItems
+                .Include(li => li.Category)
                 .AsNoTracking()
                 .Where(li => li.CategoryId == categoryId)
-                .ToList();
-
-            if (items.Count == 0)
-                throw new InvalidOperationException("No library items found in this category.");
+                .ToList();     
 
             return items;
         }

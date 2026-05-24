@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.src.Interfaces;
 using Project.src.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project.src.Repositories
 {
-    public class PurchaseRecordRepository : GenericRepository<PurchaseRecord>
+    public class PurchaseRecordRepository : GenericRepository<PurchaseRecord>, IPurchaseRecordRepository
     {
         public PurchaseRecordRepository(AppDbContext context) : base(context)
         {
@@ -19,6 +20,7 @@ namespace Project.src.Repositories
         {
             if (userId <= 0)
                 throw new ArgumentException("User id must be positive.", nameof(userId));
+
             return _context.PurchaseRecords
                 .Include(pr => pr.User)
                 .Include(pr => pr.LibraryItem)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.src.Interfaces;
 using Project.src.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Project.src.Repositories
 {
-    public class BorrowRecordRepository : GenericRepository<BorrowRecord>
+    public class BorrowRecordRepository : GenericRepository<BorrowRecord>, IBorrowRecordRepository
     {
         public BorrowRecordRepository(AppDbContext context) : base(context)
         {

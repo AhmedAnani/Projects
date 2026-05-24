@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Project.src.Interfaces;
 using Project.src.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project.src.Repositories
 {
-    public class NotificationRepository : GenericRepository<Notification>
+    public class NotificationRepository : GenericRepository<Notification>, INotificationRepository
     {
         public NotificationRepository(AppDbContext context):base(context)
         {
