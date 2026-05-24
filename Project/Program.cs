@@ -2,7 +2,7 @@
 using Project.src.Data;
 using Project.src.Enums;
 using Project.src.Models;
-using Project.src.Repository;
+using Project.src.Repositories;
 using System;
 using System.ComponentModel.DataAnnotations;
 namespace Project

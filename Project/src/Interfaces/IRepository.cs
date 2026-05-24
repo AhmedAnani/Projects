@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Project.src.Interfaces
 {
-    public interface IGeneric_Repository<T> where T : class
+    public interface IRepository<T> where T : class
     {
         public void Add(T entity);
 
         public void Update(int id, Action<T> updateAction);
         public void Delete(int id);
 
-        public T GetById(int id, params Expression<Func<T, object>>[] Includes);
+        public T? GetById(int id, params Expression<Func<T, object>>[] Includes);
         public IEnumerable<T> GetAll(params Expression<Func<T, object>>[] Includes);
 
         public bool CheckExists(int id);
