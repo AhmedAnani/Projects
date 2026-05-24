@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project.src.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository: IRepository<User>
     {
         public bool EmailExists(string email);
         public User? GetByEmail(string email);
