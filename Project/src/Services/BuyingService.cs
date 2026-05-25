@@ -14,11 +14,13 @@ namespace Project.src.Services
     {
         private readonly IAuthorizationService _authorizationService;
         private readonly IPurchaseRecordRepository _purchaseRecordRepository;
+        private readonly INotificationService _notificationService;
 
-        public BuyingService(IAuthorizationService authorizationService, IPurchaseRecordRepository purchaseRecordRepository)
+        public BuyingService(IAuthorizationService authorizationService, IPurchaseRecordRepository purchaseRecordRepository, INotificationService notificationService)
         {
             _authorizationService = authorizationService;
             _purchaseRecordRepository = purchaseRecordRepository;
+            _notificationService = notificationService;
         }
         public Result ProcessBuy(User user, LibraryItem item)
         {
@@ -33,7 +35,9 @@ namespace Project.src.Services
                 
                 var purchaseRecord = new PurchaseRecord(user.Id, item.Id);
                 _purchaseRecordRepository.Add(purchaseRecord);
-                return Result.Success("Purchase processed successfully.");
+                var notification = _notificationService.SendPurchaseNotification(user.Id, item);
+                
+                return Result.Success("Purchase processed successfully.", notification);
             }
             catch (Exception ex)
             {

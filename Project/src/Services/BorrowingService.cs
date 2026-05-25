@@ -14,16 +14,18 @@ namespace Project.src.Services
         private readonly IBorrowRecordRepository _borrowRecordRepository;
         private readonly ILibraryItemRepository _libraryItemRepository;
         private readonly IAuthorizationService _authorizationService    ;
+        private readonly INotificationService _notificationService;
 
 
         private const int MaxBorrowLimit = 3; // Max Limit of borrow
         private const int BorrowDaysLimit = 14; // Max Days of Borrowing
         private const double FinePerDay = 10.0;// fees for lating Days ya D8of XD
-        public BorrowingService(IBorrowRecordRepository borrowRecordRepository, ILibraryItemRepository libraryItemRepository, IAuthorizationService authorizationService)
+        public BorrowingService(IBorrowRecordRepository borrowRecordRepository, ILibraryItemRepository libraryItemRepository, IAuthorizationService authorizationService,INotificationService notificationService)
         {
             _borrowRecordRepository = borrowRecordRepository;
             _libraryItemRepository = libraryItemRepository;
             _authorizationService = authorizationService;
+            _notificationService = notificationService;
         }
         // I use Result class to return the result of the operation, it contains a boolean property IsSuccess to indicate if the operation was successful and a string property Message to provide additional information about the result.
         public Result Process_Of_Borrow(User user, LibraryItem item)
@@ -40,13 +42,15 @@ namespace Project.src.Services
             if (!BorrowableItem.BorrowItem()) return Result.Failure("Failed to borrow the item. It may not be available.");
             try
             {
+                var dueDate = DateTime.Now.AddDays(BorrowDaysLimit);
                 var borrowRecord = new BorrowRecord(
                   user.Id,
                   item.Id,
-                  DateTime.Now.AddDays(BorrowDaysLimit)
+                 dueDate
                  );
                 _borrowRecordRepository.Add(borrowRecord);
-                return Result.Success("Item borrowed successfully.");
+               var notification= _notificationService.SendBorrowNotification(user.Id, item, dueDate);
+                return Result.Success("Item borrowed successfully.", notification);
             }
             catch (Exception ex)
             {
@@ -71,9 +75,14 @@ namespace Project.src.Services
 
                 var fine = borrowRecord.CalculateFine(FinePerDay);
                 if (fine > 0)
-                    return Result.Success($"Item returned late. Fine amount: {fine} EGP.");
+                {
+                   var notificationfine= _notificationService.SendReturnNotification(user.Id, item, true, fine);
+                  
+                    return Result.Success($"Item returned late. Fine amount: {fine} EGP.", notificationfine);
+                }
 
-                return Result.Success("Item returned successfully.");
+                var notification = _notificationService.SendReturnNotification(user.Id, item, false, 0);
+                return Result.Success("Item returned successfully.", notification);
             }
             catch (Exception ex)
             {
