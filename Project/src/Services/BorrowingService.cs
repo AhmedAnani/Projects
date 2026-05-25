@@ -1,4 +1,5 @@
-﻿using Project.src.Interfaces;
+﻿using Project.src.Exceptions;
+using Project.src.Interfaces;
 using Project.src.Models;
 using System;
 using System.Collections.Generic;
@@ -37,14 +38,21 @@ namespace Project.src.Services
             if (activeBorrowRecord >= MaxBorrowLimit) return Result.Failure("User has reached the maximum borrow limit.");
             // check if the item is available for borrowing
             if (!BorrowableItem.BorrowItem()) return Result.Failure("Failed to borrow the item. It may not be available.");
-        
-            var borrowRecord = new BorrowRecord(
-              user.Id,
-              item.Id,
-              DateTime.Now.AddDays(BorrowDaysLimit)
-             );
-            _borrowRecordRepository.Add(borrowRecord);
-            return Result.Success("Item borrowed successfully.");
+            try
+            {
+                var borrowRecord = new BorrowRecord(
+                  user.Id,
+                  item.Id,
+                  DateTime.Now.AddDays(BorrowDaysLimit)
+                 );
+                _borrowRecordRepository.Add(borrowRecord);
+                return Result.Success("Item borrowed successfully.");
+            }
+            catch (Exception ex)
+            {
+                BorrowableItem.ReturnItem(); // Rollback the borrow action if adding the record fails
+                throw new BorrowRecordSaveException(user.Id, item.Id, ex);
+            }
         }
 
         public Result Process_Of_Return(User user, LibraryItem item)
@@ -52,17 +60,26 @@ namespace Project.src.Services
             if(item is not IBorrowable BorrowableItem) return Result.Failure("Item cannot be returned.");
             var borrowRecord = _borrowRecordRepository.GetBookToReturnBorrowRecord(user.Id, item.Id);
             if (borrowRecord == null) return Result.Failure("No active borrow record found for this item.");
-            BorrowableItem.ReturnItem();
-            // Update the borrow record to mark it as returned and use delegate to update the record in the repository because it is private set
-            _borrowRecordRepository.Update(borrowRecord.Id, record =>
+            try
             {
-                record.MarkReturned();
-            });
-            // Calculate fine if the item is returned late 
-            var fine = borrowRecord.CalculateFine(FinePerDay);
-            if (fine > 0)
-                return Result.Success($"Item returned late. Fine amount: {fine} EGP.");
-            return Result.Success("Item returned successfully.");
+                BorrowableItem.ReturnItem();
+
+                _borrowRecordRepository.Update(borrowRecord.Id, record =>
+                {
+                    record.MarkReturned();
+                });
+
+                var fine = borrowRecord.CalculateFine(FinePerDay);
+                if (fine > 0)
+                    return Result.Success($"Item returned late. Fine amount: {fine} EGP.");
+
+                return Result.Success("Item returned successfully.");
+            }
+            catch (Exception ex)
+            {
+                BorrowableItem.BorrowItem(); //  Rollback ReturnItem
+                throw new BorrowRecordUpdateException(user.Id, item.Id, ex);
+            }
         }
     }
 }

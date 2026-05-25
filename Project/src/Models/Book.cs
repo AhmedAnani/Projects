@@ -31,10 +31,18 @@ namespace Project.src.Models
                 MarkAsAvailable();
         }
 
-        public void BuyItem()
+        public bool BuyItem()
         {
-            if (IsAvailable)
-                MarkAsSold();
+            if (!IsAvailable)
+                return false;
+
+            MarkAsSold();
+            return true;
+        }
+        public void UndoBuy()
+        {
+            if (Status == ItemStatus.Sold)
+                MarkAsAvailable(); //  reverse the MarkAsSold
         }
         public override string DisplayInfo()
         {
