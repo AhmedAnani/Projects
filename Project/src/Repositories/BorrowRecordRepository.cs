@@ -15,6 +15,32 @@ namespace Project.src.Repositories
         public BorrowRecordRepository(AppDbContext context) : base(context)
         {
         }
+        // This method is used to get number of active borrow records for a specific user 
+        public int  GetActiveBorrowRecordsByUser(int userId)
+        {
+            if (userId <= 0)
+                throw new ArgumentException("User ID must be greater than zero.", nameof(userId));
+
+            return _context.BorrowRecords
+                .Include(br => br.User)
+                .Include(br => br.LibraryItem)
+                .Where(br => br.UserId == userId && br.ReturnedAt == null)
+                .Count();
+                
+        }
+        // This method is used to get the borrow record for a specific user and library item that is currently active (not returned yet). It returns null if no such record exists.
+        public BorrowRecord GetBookToReturnBorrowRecord(int userId, int libraryItemId)
+        {
+            if (userId <= 0)
+                throw new ArgumentException("User ID must be greater than zero.", nameof(userId));
+            if (libraryItemId <= 0)
+                throw new ArgumentException("Library Item ID must be greater than zero.", nameof(libraryItemId));
+            return _context.BorrowRecords
+                .Include(br => br.User)
+                .Include(br => br.LibraryItem)
+                .AsNoTracking()
+                .FirstOrDefault(br => br.UserId == userId && br.LibraryItemId == libraryItemId && br.ReturnedAt == null);
+        }
 
         // This method is used to get all borrow records for a specific user
         public IEnumerable<BorrowRecord> GetBorrowRecordsByUser(int userId)
