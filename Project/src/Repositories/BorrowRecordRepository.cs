@@ -29,7 +29,7 @@ namespace Project.src.Repositories
                 
         }
         // This method is used to get the borrow record for a specific user and library item that is currently active (not returned yet). It returns null if no such record exists.
-        public BorrowRecord GetBookToReturnBorrowRecord(int userId, int libraryItemId)
+        public BorrowRecord? GetBookToReturnBorrowRecord(int userId, int libraryItemId)
         {
             if (userId <= 0)
                 throw new ArgumentException("User ID must be greater than zero.", nameof(userId));

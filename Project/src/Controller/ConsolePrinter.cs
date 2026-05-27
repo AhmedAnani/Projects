@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Project.src.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.src.Services
+namespace Project.src.Controller
 {
     public static class ConsolePrinter
     {
@@ -53,5 +54,11 @@ namespace Project.src.Services
         // ── Item Info ─────────────────────────────────────────
         public static void ItemInfo(string label, string value)
             => Console.WriteLine($"{White}{Bold}{label}:{Reset} {value}");
+
+
+        // ── Print Message ─────────────────────────────────────────
+        public static void Empty(string message)
+            => Console.WriteLine($"{Yellow}{Bold}{message}{Reset}");
+    
     }
 }

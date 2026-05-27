@@ -13,6 +13,6 @@ namespace Project.src.Interfaces
         IEnumerable<BorrowRecord> GetActiveBorrowRecords();
         IEnumerable<BorrowRecord> GetOverdueBorrowRecords();
         public int GetActiveBorrowRecordsByUser(int userId);
-        public BorrowRecord GetBookToReturnBorrowRecord(int userId, int libraryItemId);
+        public BorrowRecord? GetBookToReturnBorrowRecord(int userId, int libraryItemId);
     }
 }
