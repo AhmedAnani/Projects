@@ -30,12 +30,13 @@ namespace Project.src.Models
         public BorrowRecord(int userId, int libraryItemId, DateTime dueDate)
         {
             // validate and set UserId, LibraryItemId, and DueDate
-     
+            UserId = ValidationHelper.CheckPositiveInteger(userId, "User id must be greater than zero.", nameof(userId));
+            LibraryItemId = ValidationHelper.CheckPositiveInteger(libraryItemId, "Library item id must be greater than zero.", nameof(libraryItemId));
+
             if (dueDate <= DateTime.Now)
                 throw new ArgumentException("Due date must be in the future.");
 
-            UserId = ValidationHelper.CheckPositiveInteger(userId, "User id must be greater than zero.", nameof(userId));
-            LibraryItemId = ValidationHelper.CheckPositiveInteger(libraryItemId, "Library item id must be greater than zero.", nameof(libraryItemId));
+          
             DueDate = dueDate;
         }
 
@@ -46,16 +47,15 @@ namespace Project.src.Models
 
         public double CalculateFine(double finePerDay)
         {
-            if (!IsReturned)
+            var endDate = ReturnedAt ?? DateTime.Now;
+
+            var daysLate = (endDate.Date - DueDate.Date).Days;
+
+            if (daysLate <= 0)
                 return 0;
 
-            if (!ReturnedAt.HasValue || ReturnedAt.Value <= DueDate)
-                return 0;
-            
-            int daysLate = (ReturnedAt.Value - DueDate).Days;
             return daysLate * finePerDay;
         }
-
         //Navigation properties
 
         // Mapping Relationship between BorrowRecord and User (1:many)

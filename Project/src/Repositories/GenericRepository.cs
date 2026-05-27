@@ -56,7 +56,7 @@ namespace Project.src.Repositories
                 query = query.Include(include);
 
             var entity = query
-                .AsNoTracking()
+               
                 .FirstOrDefault(e => EF.Property<int>(e, "Id") == id);
 
             if (entity == null)

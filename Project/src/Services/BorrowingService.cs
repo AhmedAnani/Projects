@@ -73,7 +73,10 @@ namespace Project.src.Services
                     record.MarkReturned();
                 });
 
-                var fine = borrowRecord.CalculateFine(FinePerDay);
+                var updatedRecord = _borrowRecordRepository.GetById(borrowRecord.Id);
+
+                var fine = updatedRecord.CalculateFine(FinePerDay);
+
                 if (fine > 0)
                 {
                    var notificationfine= _notificationService.SendReturnNotification(user.Id, item, true, fine);
