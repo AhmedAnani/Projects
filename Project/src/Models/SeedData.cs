@@ -84,7 +84,7 @@ namespace Project.src.Data
             var aliNotification = new Notification(
                 ali.Id,
                 "Your borrowed book is due soon",
-                NotificationChannel.SMS
+                NotificationChannel.InApp
             );
             aliNotification.MarkAsSent();
 

@@ -36,10 +36,18 @@ namespace Project.src.Models
             return base.DisplayInfo() + $"\nFile Size: {FileSize}";
         }
 
-        public void BuyItem()
+        public bool BuyItem()
         {
-            if (IsAvailable)
-                MarkAsSold();
+            if (!IsAvailable)
+                return false;
+
+            MarkAsSold();
+            return true;
+        }
+        public void UndoBuy()
+        {
+            if (Status == ItemStatus.Sold)
+                MarkAsAvailable(); // reverse the MarkAsSold
         }
     }
 }

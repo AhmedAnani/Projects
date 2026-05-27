@@ -51,7 +51,7 @@ namespace Project.src.Models
 
             if (!ReturnedAt.HasValue || ReturnedAt.Value <= DueDate)
                 return 0;
-
+            
             int daysLate = (ReturnedAt.Value - DueDate).Days;
             return daysLate * finePerDay;
         }
