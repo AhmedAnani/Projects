@@ -18,11 +18,11 @@ namespace Project.src.Models
         public EBook(string title, int categoryId, string author, string description, string fileSize)
             : base(title, categoryId, author, description)
         {
-            UpdateFileSize(fileSize);
+            ChangeFileSize(fileSize);
         }
 
         //Method that handel Encapsulations in the EF core
-        public void UpdateFileSize(string fileSize)
+        public void ChangeFileSize(string fileSize)
         {
             // Validate file size input before setting the property
             if (fileSize.Length > 500)

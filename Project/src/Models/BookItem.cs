@@ -17,17 +17,20 @@ namespace Project.src.Models
         protected BookItem(string title, int categoryId, string author, string description)
             : base(title, categoryId)
         {
-            UpdateBookDetails(author, description);
+            ChangeAuthor(author);
+            ChangeDescription(description);
         }
 
-        //Method to handel Encapsulations in the EF core
-        public void UpdateBookDetails(string author, string description)
+        
+
+        public void ChangeAuthor(string author)
         {
-            // Validate and set the Author and Description properties 
             Author = ValidationHelper.CheckNotNullOrWhiteSpaceText(author, "Author cannot be null or whitespace.", nameof(author));
+        }
+        public void ChangeDescription(string description)
+        {
             Description = ValidationHelper.CheckNotNullOrWhiteSpaceText(description, "Description cannot be null or whitespace.", nameof(description));
         }
-
         public override  string DisplayInfo()
         {
             return $"Id: {Id}\n" +
