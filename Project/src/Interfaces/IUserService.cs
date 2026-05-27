@@ -10,9 +10,9 @@ namespace Project.src.Interfaces
 {
     public interface IUserService
     {
-        void AddUser(User? currentUser, string name, string email, UserRole role);
-        void UpdateUser(User? currentUser, int userId, string name, string email, UserRole role);
-        void DeleteUser(User? currentUser, int userId);
+        string AddUser(User? currentUser, string name, string email, UserRole role);
+        string UpdateUser(User? currentUser, int userId, string name, string email, UserRole role);
+        string DeleteUser(User? currentUser, int userId);
         IEnumerable<User> GetAllUsers(User? currentUser);
         User? GetUserByEmail(User? currentUser, string email);
 

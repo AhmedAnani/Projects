@@ -22,11 +22,10 @@ namespace Project.src.Services
         }
 
         //This service is responsible for Adding new user to the system
-        public void AddUser(User? currentUser, string name, string email, UserRole role)
+        public string AddUser(User? currentUser, string name, string email, UserRole role)
         {
             //Check if the current user is authorized to manage users
-            if (!_authorizationService.CanManageUsers(currentUser))
-                throw new UnauthorizedAccessException("You do not have permission to manage users.");
+            EnsureCanManageUsers(currentUser);
 
             //Create a new user object with the provided information
             var newUser = new User(name, email, role);
@@ -39,6 +38,9 @@ namespace Project.src.Services
 
                 //Add the new user to the system
                 _userRepository.Add(newUser);
+
+                //Return a success message indicating that the user was added successfully
+                return $"User '{newUser.Name}' added successfully.";
             }
             catch (EmailExistsException)
             {
@@ -52,28 +54,29 @@ namespace Project.src.Services
 
         }
 
-        public void DeleteUser(User? currentUser, int userId)
+        public string DeleteUser(User? currentUser, int userId)
         {
             //Check if the current user is authorized to delete users from the system
-            if (!_authorizationService.CanManageUsers(currentUser))
-                throw new UnauthorizedAccessException("You do not have permission to manage users.");
+            EnsureCanManageUsers(currentUser);
 
             //Check if the user id is not valid
-            if (userId <= 0)
-                throw new ArgumentException("User id must be greater than zero.", nameof(userId));
+            EnsureValidUserId(userId);
 
             //Prevent users from deleting their own account
             if (currentUser != null && currentUser.Id == userId)
                 throw new InvalidOperationException("You cannot delete your own account.");
-
-            //Check if the user exists before attempting to delete
-            if (!_userRepository.CheckExists(userId))
-                throw new KeyNotFoundException($"User with this id: {userId} not found.");
-
+ 
             try
             {
-                //Delete the user from the system
+                //Check if the user exists before attempting to delete
+                var userToDelete = _userRepository.GetById(userId);
+
                 _userRepository.Delete(userId);
+
+                //Delete the user from the system
+                return $"User '{userToDelete?.Name}' deleted successfully.";
+               
+                
             }
 
             //To catch KeyNotFoundException from above code and rethrow it to be handled by the caller
@@ -92,8 +95,7 @@ namespace Project.src.Services
         public IEnumerable<User> GetAllUsers(User? currentUser)
         {
             //Check if the current user is authorized to Get all users in the system
-            if (!_authorizationService.CanManageUsers(currentUser))
-                throw new UnauthorizedAccessException("You do not have permission to manage users.");
+            EnsureCanManageUsers(currentUser);
 
             try
             {
@@ -109,8 +111,7 @@ namespace Project.src.Services
         public User? GetUserByEmail(User? currentUser, string email)
         {
             //Check if the current user is authorized to manage users
-            if (!_authorizationService.CanManageUsers(currentUser))
-                throw new UnauthorizedAccessException("You do not have permission to manage users.");
+            EnsureCanManageUsers(currentUser);
 
             //Check if the email is valid or not
             if (string.IsNullOrWhiteSpace(email))
@@ -140,12 +141,10 @@ namespace Project.src.Services
         public User? GetUserById(User? currentUser, int userId)
         {
             //Check if the current user is authorized to Get specific user from the system
-            if (!_authorizationService.CanManageUsers(currentUser))
-                throw new UnauthorizedAccessException("You do not have permission to manage users.");
+            EnsureCanManageUsers(currentUser);
 
             //Check if the user id is not valid
-            if (userId <= 0)
-                throw new ArgumentException("User id must be greater than zero.", nameof(userId));
+            EnsureValidUserId(userId);
 
             try
             {
@@ -165,21 +164,15 @@ namespace Project.src.Services
 
         }
 
-        public void UpdateUser(User? currentUser, int userId, string name, string email, UserRole role)
+        public string UpdateUser(User? currentUser, int userId, string name, string email, UserRole role)
         {
             //Check if the current user is authorized to Get specific user from the system
-            if (!_authorizationService.CanManageUsers(currentUser))
-                throw new UnauthorizedAccessException("You do not have permission to manage users.");
-
+            EnsureCanManageUsers(currentUser);
             //Check if the user id is not valid
-            if (userId <= 0)
-                throw new ArgumentException("User id must be greater than zero.", nameof(userId));
+            EnsureValidUserId(userId);
 
-
-            //Get the existing user to check if the email is being updated and if the new email is already in use by another user
-
-            //Create a new user object with the provided information to validate the input before updating the existing user
-            var validatedUser = new User(name, email, role);
+             //Create a new user object with the provided information to validate the input before updating the existing user
+             var validatedUser = new User(name, email, role);
         
             try
             {
@@ -187,6 +180,7 @@ namespace Project.src.Services
                 if (!_userRepository.CheckExists(userId))
                     throw new KeyNotFoundException($"User with this id: {userId} not found.");
 
+                //Get the existing user to check if the email is being updated and if the new email is already in use by another user
                 var userWithSameEmail = _userRepository.GetByEmail(validatedUser.Email);
 
 
@@ -201,6 +195,8 @@ namespace Project.src.Services
                     u.ChangeEmail(validatedUser.Email);
                     u.ChangeRole(validatedUser.Role);
                 });
+
+                return $"User '{validatedUser.Name}' updated successfully.";
             }
 
             //To catch KeyNotFoundException from above code and rethrow it to be handled by the caller
@@ -218,6 +214,19 @@ namespace Project.src.Services
             {
                 throw new InvalidOperationException("An error occurred while updating the user.", ex);
             }
+        }
+
+        // Private helper methods for validation and authorization checks
+        private void EnsureValidUserId(int userId)
+        {
+            if (userId <= 0)
+                throw new ArgumentException("User id must be greater than zero.", nameof(userId));
+        }
+
+        private void EnsureCanManageUsers(User? currentUser)
+        {
+            if (!_authorizationService.CanManageUsers(currentUser))
+                throw new UnauthorizedAccessException("You do not have permission to manage users.");
         }
     }
 }
