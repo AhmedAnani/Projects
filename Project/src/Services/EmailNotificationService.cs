@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using Project.src.Enums;
+using Project.src.Exceptions;
 using Project.src.Interfaces;
 using Project.src.Models;
 using System;
@@ -15,27 +16,37 @@ namespace Project.src.Services
     public class EmailNotificationService : INotificationService
     {
         private readonly INotificationRepository _notificationRepository;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IUserRepository _userRepository;
 
-        public EmailNotificationService(INotificationRepository notificationRepository)
+        public EmailNotificationService(INotificationRepository notificationRepository, IAuthorizationService authorizationService, IUserRepository userRepository)
         {
             _notificationRepository = notificationRepository;
+            _authorizationService = authorizationService;
+            _userRepository = userRepository;
         }
         public Notification SendBorrowNotification(int userId, LibraryItem item, DateTime dueDate)
         {
+        
+            var user = _userRepository.GetById(userId);
+
             var notification = new Notification(userId, $"{NotificationChannel.Email}:You have borrowed '{item.Title}'. It is due on {dueDate:MMMM dd, yyyy}.", NotificationChannel.Email);
-          _notificationRepository.Add(notification);
+            _notificationRepository.Add(notification);
             return notification;
         }
 
         public Notification SendPurchaseNotification(int userId, LibraryItem item)
         {
+           
+
             var notification = new Notification(userId, $"{NotificationChannel.Email}:You have purchased '{item.Title}'.", NotificationChannel.Email);
-          _notificationRepository.Add(notification);
+            _notificationRepository.Add(notification);
             return notification;
         }
 
-        public Notification SendReturnNotification(int userId, LibraryItem item, bool islate ,double Fine)
+        public Notification SendReturnNotification(int userId, LibraryItem item, bool islate, double Fine)
         {
+        
             string message = $"{NotificationChannel.Email}: You have returned '{item.Title}'.";
 
             if (islate)
@@ -47,5 +58,13 @@ namespace Project.src.Services
             return notification;
 
         }
+        //public void CheckIfCanSeeReports(int userId)
+        //{
+        //    var user = _userRepository.GetById(userId);
+        //    if (!_authorizationService.CanViewReports(user))
+        //    {
+        //        throw new UnauthorizedAccessException("You are not authorized to see reports.");
+        //    }
+        //}
     }
 }
