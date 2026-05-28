@@ -128,7 +128,7 @@ namespace Project.src.Controller
         }
 
         //Method for return existing item from his id
-        public void ShowItemById(User? currentUser, int itemId)
+        public LibraryItem? GetItemById(User? currentUser, int itemId)
         {
             try
             {
@@ -137,14 +137,17 @@ namespace Project.src.Controller
                 if (item == null)
                 {
                     ConsolePrinter.Warning("Item not found.");
-                    return;
+                    return null;
                 }
 
                 LibraryItemConsolePrinter.LibraryItemInfo(item);
+
+                return item;
             }
             catch (Exception ex)
             {
                 PrintError(ex);
+                return null;
             }
         }
 

@@ -54,13 +54,6 @@ namespace Project.src.Services
             return notification;
 
         }
-        //public void CheckIfCanSeeReports(int userId)
-        //{
-        //    var user = _userRepository.GetById(userId);
-        //    if (!_authorizationService.CanViewReports(user))
-        //    {
-        //        throw new UnauthorizedAccessException("You are not authorized to see reports.");
-        //    }
-        //}
+       
     }
 }

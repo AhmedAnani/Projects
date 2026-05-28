@@ -1,46 +1,46 @@
 ﻿using Project.src.Controller;
 using Project.src.Data;
+using Project.src.Enums;
 using Project.src.Interfaces;
 using Project.src.Models;
 using Project.src.Repositories;
 using Project.src.Services;
 
-namespace Project.src.App
+public class AppBootstrapper
 {
-    public class AppBootstrapper
+    public LibraryManager Manager { get; }
+    public LibraryItemsManager ItemsManager { get; }
+    public UserManager UserManager { get; }
+    public IAuthorizationService AuthService { get; }
+    public User? CurrentUser { get; set; }
+
+    public AppBootstrapper()
     {
-        public LibraryManager Manager { get; }
-        public IAuthorizationService AuthService { get; }
-        public LibraryItemRepository ItemRepo { get; }
-        public UserRepository UserRepo { get; }
-        public User CurrentUser { get; set; }
+        var context = new AppDbContext();
+        SeedData.Initialize(context);
 
-        public AppBootstrapper()
-        {
-            var context = new AppDbContext();
+        // ── Repositories ──────────────────────────────────────
+        var categoryRepo = new CategoryRepository(context);
+        var itemRepo = new LibraryItemRepository(context);
+        var userRepo = new UserRepository(context);
+        var purchaseRepo = new PurchaseRecordRepository(context);
+        var borrowRepo = new BorrowRecordRepository(context);
+        var notificationRepo = new NotificationRepository(context);
 
-            // ── Seed ──────────────────────────────────────────────
-            SeedData.Initialize(context);
+        // ── Services ──────────────────────────────────────────
+        AuthService = new AuthorizationService();
+        var notificationService = new InAppNotificationService(notificationRepo, AuthService, userRepo);
+        var buyingService = new BuyingService(AuthService, purchaseRepo, notificationService);
+        var borrowingService = new BorrowingService(borrowRepo, itemRepo, AuthService, notificationService);
+        var libraryItemService = new LibraryItemService(itemRepo, categoryRepo, AuthService);
+        var userService = new UserService(userRepo, AuthService);
 
-            // ── Repositories ──────────────────────────────────────
-            var categoryRepo = new CategoryRepository(context);
-            ItemRepo = new LibraryItemRepository(context);
-            UserRepo = new UserRepository(context);
-            var purchaseRepo = new PurchaseRecordRepository(context);
-            var borrowRepo = new BorrowRecordRepository(context);
-            var notificationRepo = new NotificationRepository(context);
+        // ── Controllers ───────────────────────────────────────
+        Manager = new LibraryManager(buyingService, borrowingService);
+        ItemsManager = new LibraryItemsManager(libraryItemService);
+        UserManager = new UserManager(userService);
 
-            // ── Services ──────────────────────────────────────────
-            AuthService = new AuthorizationService();
-            var notificationService = new InAppNotificationService(notificationRepo, AuthService, UserRepo);
-            var buyingService = new BuyingService(AuthService, purchaseRepo, notificationService);
-            var borrowingService = new BorrowingService(borrowRepo, ItemRepo, AuthService, notificationService);
-
-            // ── Controller ────────────────────────────────────────
-            Manager = new LibraryManager(buyingService, borrowingService);
-
-            // ── Set default current user (first regular User) ─────
-            CurrentUser = UserRepo.GetAll().First(u => u.Role == Enums.UserRole.User);
-        }
+        // ── Current User ──────────────────────────────────────
+        CurrentUser = userRepo.GetAll().FirstOrDefault(u => u.Role == UserRole.Admin);
     }
 }

@@ -15,7 +15,11 @@ namespace Project
     {
         public static void Main(string[] args)
         {
-            var app = new LibraryApp();
+
+            
+
+            var appBootstrapper = new AppBootstrapper();
+            var app = new LibraryApp(appBootstrapper);
             app.Run();
 
 

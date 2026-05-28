@@ -1,147 +1,208 @@
-﻿using Project.src.Enums;
-using Project.src.Interfaces;
-using Project.src.Models;
+﻿using Project.src.App;
+using Project.src.Controller;
+using Project.src.Enums;
 
-namespace Project.src.App
+public class LibraryApp
 {
-    public class LibraryApp
-    {
-        private readonly AppBootstrapper _boot;
+    private readonly AppBootstrapper _boot;
+    private readonly Dictionary<string, Action> _commands;
 
-        public LibraryApp()
+    public LibraryApp(AppBootstrapper appBootstrapper)
+    {
+        _boot = appBootstrapper ;
+        _commands = new Dictionary<string, Action>
         {
-            _boot = new AppBootstrapper();
+            ["1"] = HandleViewAll,
+            ["2"] = HandleSearch,
+            ["3"] = HandleBuy,
+            ["4"] = HandleBorrow,
+            ["5"] = HandleReturn,
+            ["7"] = HandleAddItem,
+            ["8"] = HandleUpdateItem,
+            ["9"] = HandleDeleteItem,
+            ["10"] = HandleAddUser,
+            ["11"] = HandleUpdateUser,
+            ["12"] = HandleDeleteUser,
+            ["13"] = HandleListUsers
+        };
+    }
+
+    public void Run()
+    {
+        string choice;
+        do
+        {
+            Console.Clear();
+            MenuRenderer.ShowMenu(_boot.CurrentUser, _boot.AuthService);
+            choice = Console.ReadLine() ?? "";
+
+            try { HandleChoice(choice); }
+            catch (Exception ex) { ConsolePrinter.Error($"Error: {ex.Message}"); }
+
+            if (choice != "6")
+            {
+                Console.WriteLine("\nPress any key...");
+                Console.ReadKey();
+            }
+
+        } while (choice != "6");
+    }
+
+    private void HandleChoice(string choice)
+    {
+        if (choice == "6")
+        {
+            ConsolePrinter.Info("Goodbye!");
+            return;
         }
 
-        public void Run()
+        if (_commands.TryGetValue(choice, out var action))
+            action();
+        else
+            ConsolePrinter.Warning("Invalid choice.");
+    }
+    // ── Items ────────────────────────────────────────────────
+    private void HandleViewAll()
+        => _boot.ItemsManager.ShowAllItems(_boot.CurrentUser);
+
+    private void HandleSearch()
+    {
+        var id = InputHelper.GetInt("Enter item ID: ");
+        _boot.ItemsManager.GetItemById(_boot.CurrentUser, id);
+     
+    }
+
+    private void HandleAddItem()
+    {
+        var type = InputHelper.GetEnum<ItemType>("Choose type (Book, EBook, Magazine): ");
+
+        var title = InputHelper.GetString("Title: ");
+        var catId = InputHelper.GetInt("Category ID: ");
+
+        switch (type)
         {
-            string choice;
-            do
-            {
-                Console.Clear();
-                MenuRenderer.ShowMenu(_boot.CurrentUser, _boot.AuthService);
-                choice = Console.ReadLine() ?? "";
-
-                try { HandleChoice(choice); }
-                catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); }
-
-                if (choice != "6")
+            case ItemType.Book:
                 {
-                    Console.WriteLine("\nPress any key...");
-                    Console.ReadKey();
+                    var author = InputHelper.GetString("Author: ");
+                    var desc = InputHelper.GetString("Description: ");
+                    _boot.ItemsManager.AddBook(_boot.CurrentUser, title, catId, author, desc);
+                    break;
                 }
 
-            } while (choice != "6");
-        }
+            case ItemType.EBook:
+                {
+                    var eAuthor = InputHelper.GetString("Author: ");
+                    var eDesc = InputHelper.GetString("Description: ");
+                    var fileSize = InputHelper.GetString("File Size: ");
+                    _boot.ItemsManager.AddEBook(_boot.CurrentUser, title, catId, eAuthor, eDesc, fileSize);
+                    break;
+                }
 
-        // ── Router ───────────────────────────────────────────────
+            case ItemType.Magazine:
+                {
+                    _boot.ItemsManager.AddMagazine(_boot.CurrentUser, title, catId);
+                    break;
+                }
 
-        private void HandleChoice(string choice)
-        {
-            switch (choice)
-            {
-                case "1": HandleViewAll(); break;
-                case "2": HandleSearch(); break;
-                case "3": HandleBuy(); break;
-                case "4": HandleBorrow(); break;
-                case "5": HandleReturn(); break;
-                case "6": Console.WriteLine("Goodbye!"); break;
-                case "7": HandleAddItem(); break;
-                case "8": HandleUpdateItem(); break;
-                case "9": HandleDeleteItem(); break;
-                case "10": HandleAddUser(); break;
-                case "11": HandleUpdateUser(); break;
-                case "12": HandleDeleteUser(); break;
-                case "13": HandleListUsers(); break;
-                default: Console.WriteLine("Invalid choice."); break;
-            }
-        }
-
-        // ════════════════════════════════════════════════════════
-        //  IMPLEMENTED
-        // ════════════════════════════════════════════════════════
-
-        private void HandleBorrow()
-        {
-          
-
-            Console.Write("Enter book title to borrow: ");
-            string title = Console.ReadLine()?.ToLower() ?? "";
-
-        }
-
-        private void HandleReturn()
-        {
-            
-        }
-
-        private void HandleBuy()
-        {
-           
-        }
-
-        // ════════════════════════════════════════════════════════
-        //  TODO 
-        // ════════════════════════════════════════════════════════
-
-        private void HandleViewAll()
-        {
-            
-        }
-
-        private void HandleSearch()
-        {
-            // TODO: ask for ID, find item, call item.DisplayInfo()
-            Console.WriteLine("TODO: Search by ID");
-        }
-
-        private void HandleAddItem()
-        {
-          
-            Console.WriteLine("TODO: Add New Item");
-        }
-
-        private void HandleUpdateItem()
-        {
-           
-            Console.WriteLine("TODO: Update Item");
-        }
-
-        private void HandleDeleteItem()
-        {
-           
-            Console.WriteLine("TODO: Delete Item");
-        }
-
-        private void HandleAddUser()
-        {
-
-            Console.WriteLine("TODO: Add User");
-        }
-
-        private void HandleUpdateUser()
-        {
-            
-
-            // TODO: read user ID + new fields, call _boot.UserRepo.Update(...)
-            Console.WriteLine("TODO: Update User");
-        }
-
-        private void HandleDeleteUser()
-        {
-           
-
-            // TODO: read user ID, call _boot.UserRepo.Delete(...)
-            Console.WriteLine("TODO: Delete User");
-        }
-
-        private void HandleListUsers()
-        {
-          
-            // TODO: fetch all users and display them
-            // var users = _boot.UserRepo.GetAll();
-            // foreach (var u in users) Console.WriteLine($"{u.Id} - {u.Name} - {u.Email} - {u.Role}");
-            Console.WriteLine("TODO: List Users");
+            default:
+                ConsolePrinter.Warning("Invalid type.");
+                break;
         }
     }
+    private void HandleUpdateItem()
+    {
+        var id = InputHelper.GetInt("Enter item ID: ");
+        var type = InputHelper.GetEnum<ItemType>("Choose type (Book, EBook, Magazine): ");
+        var title = InputHelper.GetString("New Title: ");
+        var catId = InputHelper.GetInt("New Category ID: ");
+
+        switch (type)
+        {
+            case ItemType.Book:
+                {
+                    var author = InputHelper.GetString("Author: ");
+                    var desc = InputHelper.GetString("Description: ");
+                    _boot.ItemsManager.UpdateBook(_boot.CurrentUser, id, title, catId, author, desc);
+                    break;
+                }
+
+            case ItemType.EBook:
+                {
+                    var eAuthor = InputHelper.GetString("Author: ");
+                    var eDesc = InputHelper.GetString("Description: ");
+                    var fileSize = InputHelper.GetString("File Size: ");
+                    _boot.ItemsManager.UpdateEBook(_boot.CurrentUser, id, title, catId, eAuthor, eDesc, fileSize);
+                    break;
+                }
+
+            case ItemType.Magazine:
+                {
+                    _boot.ItemsManager.UpdateMagazine(_boot.CurrentUser, id, title, catId);
+                    break;
+                }
+
+            default:
+                ConsolePrinter.Warning("Invalid type.");
+                break;
+        }
+    }
+    private void HandleDeleteItem()
+    {
+        var id = InputHelper.GetInt("Enter item ID: ");
+        _boot.ItemsManager.RemoveItem(_boot.CurrentUser, id);      
+    }
+
+    // ── Borrow / Return / Buy ────────────────────────────────
+
+    private void HandleBorrow()
+    {
+        var id = InputHelper.GetInt("Enter item ID to Borrow: ");
+        var item = _boot.ItemsManager.GetItemById(_boot.CurrentUser, id);
+        if (item == null) return;
+        _boot.Manager.BorrowItem(_boot.CurrentUser, item);
+    }
+
+    private void HandleReturn()
+    {
+        var id = InputHelper.GetInt("Enter item ID to return: ");
+        var item = _boot.ItemsManager.GetItemById(_boot.CurrentUser, id);
+        if (item == null) return;
+        _boot.Manager.ReturnItem(_boot.CurrentUser, item);
+    }
+
+    private void HandleBuy()
+    {
+        var id = InputHelper.GetInt("Enter item ID to buy: ");
+        var item = _boot.ItemsManager.GetItemById(_boot.CurrentUser, id);
+        if (item == null) return;
+        _boot.Manager.BuyItem(_boot.CurrentUser, item);
+    }
+
+    // ── Users ────────────────────────────────────────────────
+
+    private void HandleAddUser()
+    {
+        var name = InputHelper.GetString("Name: ");
+        var email = InputHelper.GetString("Email: ");
+        var role = InputHelper.GetEnum<UserRole>("Role (0=User, 1=Admin): ");
+        _boot.UserManager.AddUser(_boot.CurrentUser, name, email, role);
+    }
+
+    private void HandleUpdateUser()
+    {
+        var id = InputHelper.GetInt("Enter user ID ");
+        var name = InputHelper.GetString("New Name: ");
+        var email = InputHelper.GetString("New Email: ");
+        var role = InputHelper.GetEnum<UserRole>("Role (0=User, 1=Admin): ");
+        _boot.UserManager.UpdateUser(_boot.CurrentUser, id, name, email, role);
+    }
+
+    private void HandleDeleteUser()
+    {
+        var id = InputHelper.GetInt("Enter user ID ");
+        _boot.UserManager.DeleteUser(_boot.CurrentUser, id);   
+    }
+
+    private void HandleListUsers()
+        => _boot.UserManager.ShowAllUsers(_boot.CurrentUser);
 }
