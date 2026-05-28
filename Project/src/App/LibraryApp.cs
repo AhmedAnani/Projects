@@ -5,39 +5,32 @@ using Project.src.Enums;
 public class LibraryApp
 {
     private readonly AppBootstrapper _boot;
-    private readonly Dictionary<string, Action> _commands;
 
     public LibraryApp(AppBootstrapper appBootstrapper)
     {
-        _boot = appBootstrapper ;
-        _commands = new Dictionary<string, Action>
-        {
-            ["1"] = HandleViewAll,
-            ["2"] = HandleSearch,
-            ["3"] = HandleBuy,
-            ["4"] = HandleBorrow,
-            ["5"] = HandleReturn,
-            ["7"] = HandleAddItem,
-            ["8"] = HandleUpdateItem,
-            ["9"] = HandleDeleteItem,
-            ["10"] = HandleAddUser,
-            ["11"] = HandleUpdateUser,
-            ["12"] = HandleDeleteUser,
-            ["13"] = HandleListUsers
-        };
+        _boot = appBootstrapper;
     }
 
     public void Run()
     {
         string choice;
+
         do
         {
             Console.Clear();
+
             MenuRenderer.ShowMenu(_boot.CurrentUser, _boot.AuthService);
+
             choice = Console.ReadLine() ?? "";
 
-            try { HandleChoice(choice); }
-            catch (Exception ex) { ConsolePrinter.Error($"Error: {ex.Message}"); }
+            try
+            {
+                HandleChoice(choice);
+            }
+            catch (Exception ex)
+            {
+                ConsolePrinter.Error($"Error: {ex.Message}");
+            }
 
             if (choice != "6")
             {
@@ -50,17 +43,67 @@ public class LibraryApp
 
     private void HandleChoice(string choice)
     {
-        if (choice == "6")
+        switch (choice)
         {
-            ConsolePrinter.Info("Goodbye!");
-            return;
-        }
+            case "1":
+                HandleViewAll();
+                break;
 
-        if (_commands.TryGetValue(choice, out var action))
-            action();
-        else
-            ConsolePrinter.Warning("Invalid choice.");
+            case "2":
+                HandleSearch();
+                break;
+
+            case "3":
+                HandleBuy();
+                break;
+
+            case "4":
+                HandleBorrow();
+                break;
+
+            case "5":
+                HandleReturn();
+                break;
+
+            case "6":
+                ConsolePrinter.Info("Goodbye!");
+                break;
+
+            case "7":
+                HandleAddItem();
+                break;
+
+            case "8":
+                HandleUpdateItem();
+                break;
+
+            case "9":
+                HandleDeleteItem();
+                break;
+
+            case "10":
+                HandleAddUser();
+                break;
+
+            case "11":
+                HandleUpdateUser();
+                break;
+
+            case "12":
+                HandleDeleteUser();
+                break;
+
+            case "13":
+                HandleListUsers();
+                break;
+
+            default:
+                ConsolePrinter.Warning("Invalid choice.");
+                break;
+        }
     }
+
+   
     // ── Items ────────────────────────────────────────────────
     private void HandleViewAll()
         => _boot.ItemsManager.ShowAllItems(_boot.CurrentUser);
@@ -74,7 +117,7 @@ public class LibraryApp
 
     private void HandleAddItem()
     {
-        var type = InputHelper.GetEnum<ItemType>("Choose type (Book, EBook, Magazine): ");
+        var type = InputHelper.GetEnum<ItemType>("Choose type (1-Book, 2-EBook, 3-Magazine): ");
 
         var title = InputHelper.GetString("Title: ");
         var catId = InputHelper.GetInt("Category ID: ");
@@ -109,10 +152,12 @@ public class LibraryApp
                 break;
         }
     }
+
     private void HandleUpdateItem()
     {
         var id = InputHelper.GetInt("Enter item ID: ");
-        var type = InputHelper.GetEnum<ItemType>("Choose type (Book, EBook, Magazine): ");
+        var type = InputHelper.GetEnum<ItemType>("Choose type (1-Book, 2-EBook, 3-Magazine): ");
+
         var title = InputHelper.GetString("New Title: ");
         var catId = InputHelper.GetInt("New Category ID: ");
 
@@ -146,6 +191,7 @@ public class LibraryApp
                 break;
         }
     }
+
     private void HandleDeleteItem()
     {
         var id = InputHelper.GetInt("Enter item ID: ");
