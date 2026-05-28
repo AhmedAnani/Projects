@@ -23,7 +23,22 @@ public static class InputHelper
         return Console.ReadLine() ?? "";
     }
 
-    public static T GetEnum<T>(string prompt) where T : struct
+
+    public static string GetRequiredString(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(input))
+                return input.Trim();
+
+            ConsolePrinter.Warning("Value cannot be empty, try again:");
+        }
+    }
+
+    public static T GetEnum<T>(string prompt) where T : struct,Enum
     {
         Console.Write(prompt);
 
