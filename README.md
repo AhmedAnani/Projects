@@ -299,7 +299,7 @@ Example seeded roles may include:
 ## Team Members
 
 - Team member 1: Mohamed Ahmed.
-- Student 2: Gihad Alaa.
+- Team member 2: Gihad Elrwiny.
 
 ## Notes
 
