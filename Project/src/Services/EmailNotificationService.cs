@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualBasic;
 using Project.src.Enums;
 using Project.src.Exceptions;
-using Project.src.Interfaces;
+using Project.src.Interfaces.IRepository;
+using Project.src.Interfaces.IService;
 using Project.src.Models;
 using System;
 using System.Collections.Generic;
@@ -25,39 +26,28 @@ namespace Project.src.Services
             _authorizationService = authorizationService;
             _userRepository = userRepository;
         }
-        public Notification SendBorrowNotification(int userId, LibraryItem item, DateTime dueDate)
+        public List<Notification> SendBorrowNotification(int userId, LibraryItem item, DateTime dueDate)
         {
-        
-            var user = _userRepository.GetById(userId);
-
-            var notification = new Notification(userId, $"{NotificationChannel.Email}:You have borrowed '{item.Title}'. It is due on {dueDate:MMMM dd, yyyy}.", NotificationChannel.Email);
+            var notification = new Notification(userId, $"Email Notification: You have borrowed '{item.Title}'. It is due on {dueDate:MMMM dd, yyyy}.", NotificationChannel.Email);
             _notificationRepository.Add(notification);
-            return notification;
+            return new List<Notification> { notification };
         }
 
-        public Notification SendPurchaseNotification(int userId, LibraryItem item)
+        public List<Notification> SendPurchaseNotification(int userId, LibraryItem item)
         {
-           
-
-            var notification = new Notification(userId, $"{NotificationChannel.Email}:You have purchased '{item.Title}'.", NotificationChannel.Email);
+            var notification = new Notification(userId, $"Email Notification: You have purchased '{item.Title}'.", NotificationChannel.Email);
             _notificationRepository.Add(notification);
-            return notification;
+            return new List<Notification> { notification };
         }
 
-        public Notification SendReturnNotification(int userId, LibraryItem item, bool islate, double Fine)
+        public List<Notification> SendReturnNotification(int userId, LibraryItem item, bool islate, double Fine)
         {
-        
-            string message = $"{NotificationChannel.Email}: You have returned '{item.Title}'.";
-
-            if (islate)
-            {
-                message += $" You returned late and your fine is {Fine} EGP.";
-            }
+            string message = $"Email Notification: You have returned '{item.Title}'.";
+            if (islate) message += $" You returned late and your fine is {Fine} EGP.";
             var notification = new Notification(userId, message, NotificationChannel.Email);
             _notificationRepository.Add(notification);
-            return notification;
-
+            return new List<Notification> { notification };
         }
-     
+
     }
 }

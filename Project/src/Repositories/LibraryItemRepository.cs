@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Project.src.Enums;
-using Project.src.Interfaces;
+using Project.src.Interfaces.IRepository;
 using Project.src.Models;
 
 namespace Project.src.Repositories

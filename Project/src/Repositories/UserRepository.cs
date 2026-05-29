@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Project.src.Interfaces;
+using Project.src.Interfaces.IRepository;
 using Project.src.Models;
 
 namespace Project.src.Repositories

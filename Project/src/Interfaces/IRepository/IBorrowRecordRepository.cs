@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.src.Interfaces
+namespace Project.src.Interfaces.IRepository
 {
     public interface IBorrowRecordRepository: IRepository<BorrowRecord>
     {

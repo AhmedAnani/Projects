@@ -1,5 +1,5 @@
 ﻿using Project.src.Enums;
-using Project.src.Interfaces;
+using Project.src.Interfaces.IService;
 
 namespace Project.src.Models
 {

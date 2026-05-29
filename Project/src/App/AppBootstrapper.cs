@@ -1,7 +1,8 @@
 ﻿using Project.src.Controller;
 using Project.src.Data;
 using Project.src.Enums;
-using Project.src.Interfaces;
+using Project.src.Interfaces.IRepository;
+using Project.src.Interfaces.IService;
 using Project.src.Models;
 using Project.src.Repositories;
 using Project.src.Services;
@@ -33,7 +34,18 @@ public class AppBootstrapper
 
         // ------------------ Services ----------------------------------------------------
         AuthService = new AuthorizationService();
-        var notificationService = new InAppNotificationService(notificationRepo, AuthService, userRepo);
+
+        // Individual channels
+        var emailService = new EmailNotificationService(notificationRepo, AuthService, userRepo);
+        var inAppService = new InAppNotificationService(notificationRepo, AuthService, userRepo);
+
+        // Composite
+        var notificationService = new CompositeNotificationService(new INotificationService[]
+        {
+            emailService,
+           inAppService
+        });
+
         var buyingService = new BuyingService(AuthService, purchaseRepo, notificationService);
         var borrowingService = new BorrowingService(borrowRepo, itemRepo, AuthService, notificationService);
         var libraryItemService = new LibraryItemService(itemRepo, categoryRepo, AuthService);

@@ -1,5 +1,5 @@
 ﻿using Project.src.Enums;
-using Project.src.Interfaces;
+using Project.src.Interfaces.IService;
 using Project.src.Models;
 
 namespace Project.src.App
@@ -74,7 +74,11 @@ namespace Project.src.App
                 options.Add("23. Get User By ID");
                 options.Add("24. Get User By Email");
             }
-
+            if (auth.CanViewReports(currentUser))
+            {
+                options.Add("26. View Borrow Records");
+            }
+           
             options.Add("25. Exit");
 
             PrintBox("Library Management System", options);

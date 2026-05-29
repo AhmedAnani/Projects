@@ -1,5 +1,6 @@
 ﻿using Project.src.Exceptions;
-using Project.src.Interfaces;
+using Project.src.Interfaces.IRepository;
+using Project.src.Interfaces.IService;
 using Project.src.Models;
 using System;
 using System.Collections.Generic;
@@ -35,9 +36,8 @@ namespace Project.src.Services
                 
                 var purchaseRecord = new PurchaseRecord(user.Id, item.Id);
                 _purchaseRecordRepository.Add(purchaseRecord);
-                var notification = _notificationService.SendPurchaseNotification(user.Id, item);
-                
-                return Result.Success("Purchase processed successfully.", notification);
+                var notifications = _notificationService.SendPurchaseNotification(user.Id, item);
+                return Result.Success("Item purchased successfully.", notifications);
             }
             catch (Exception ex)
             {

@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.src.Interfaces
+namespace Project.src.Interfaces.IService
 {
-    public interface IBorrowable
+    public interface IBuyable
     {
-        bool BorrowItem();
-        void ReturnItem();
+        bool BuyItem();
+        void UndoBuy();
+
     }
 }

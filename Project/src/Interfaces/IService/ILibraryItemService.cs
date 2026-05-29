@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Project.src.Models;
 
-namespace Project.src.Interfaces
+namespace Project.src.Interfaces.IService
 {
     public interface ILibraryItemService
     {

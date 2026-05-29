@@ -1,5 +1,6 @@
 ﻿using Project.src.Exceptions;
-using Project.src.Interfaces;
+using Project.src.Interfaces.IRepository;
+using Project.src.Interfaces.IService;
 using Project.src.Models;
 using System;
 using System.Collections.Generic;
@@ -49,8 +50,8 @@ namespace Project.src.Services
                  dueDate
                  );
                 _borrowRecordRepository.Add(borrowRecord);
-               var notification= _notificationService.SendBorrowNotification(user.Id, item, dueDate);
-                return Result.Success("Item borrowed successfully.", notification);
+                var notifications = _notificationService.SendBorrowNotification(user.Id, item, dueDate);
+                return Result.Success("Item borrowed successfully.", notifications);
             }
             catch (Exception ex)
             {
@@ -76,22 +77,23 @@ namespace Project.src.Services
                 var updatedRecord = _borrowRecordRepository.GetById(borrowRecord.Id);
 
                 var fine = updatedRecord.CalculateFine(FinePerDay);
-
-                if (fine > 0)
+                if(fine > 0)
                 {
-                   var notificationfine= _notificationService.SendReturnNotification(user.Id, item, true, fine);
-                  
-                    return Result.Success($"Item returned late. Fine amount: {fine} EGP.", notificationfine);
+                    var notifications1 = _notificationService.SendReturnNotification(user.Id, item, true, fine);
+                    return Result.Success($"Item returned late. Fine amount: {fine} EGP.", notifications1);
                 }
-
-                var notification = _notificationService.SendReturnNotification(user.Id, item, false, 0);
-                return Result.Success("Item returned successfully.", notification);
+                var notifications = _notificationService.SendReturnNotification(user.Id, item, false, 0);
+                return Result.Success("Item returned successfully.", notifications);
             }
             catch (Exception ex)
             {
                 BorrowableItem.BorrowItem(); //  Rollback ReturnItem
                 throw new BorrowRecordUpdateException(user.Id, item.Id, ex);
             }
+        }
+        public IEnumerable<BorrowRecord> GetBorrowRecords()
+        {
+            return _borrowRecordRepository.GetActiveBorrowRecords() ?? Enumerable.Empty<BorrowRecord>();
         }
     }
 }

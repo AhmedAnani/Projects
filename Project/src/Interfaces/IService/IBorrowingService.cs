@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.src.Interfaces
+namespace Project.src.Interfaces.IService
 {
     public interface IBorrowingService
     {
         public Result Process_Of_Borrow(User user, LibraryItem item);
         public Result Process_Of_Return(User user, LibraryItem item);
+        IEnumerable<BorrowRecord> GetBorrowRecords();
     }
 }

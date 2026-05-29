@@ -1,6 +1,5 @@
 ﻿using Project.src.Exceptions;
-
-using Project.src.Interfaces;
+using Project.src.Interfaces.IService;
 using Project.src.Models;
 
 namespace Project.src.Controller
@@ -26,8 +25,9 @@ namespace Project.src.Controller
                 if (result.IsSuccess)
                 {
                     ConsolePrinter.Success(result.Message);
-                    if (result.Notification != null)
-                        ConsolePrinter.Notification(result.Notification.Message);
+                    if (result.Notifications != null && result.Notifications.Any())
+                        foreach (var n in result.Notifications)
+                            ConsolePrinter.Notification(n.Message);
                 }
                 else
                 {
@@ -54,8 +54,9 @@ namespace Project.src.Controller
                 if (result.IsSuccess)
                 {
                     ConsolePrinter.Success(result.Message);
-                    if (result.Notification != null)
-                        ConsolePrinter.Notification(result.Notification.Message);
+                    if (result.Notifications != null && result.Notifications.Any())
+                        foreach (var n in result.Notifications)
+                            ConsolePrinter.Notification(n.Message);
                 }
                 else
                 {
@@ -82,8 +83,9 @@ namespace Project.src.Controller
                 if (result.IsSuccess)
                 {
                     ConsolePrinter.Success(result.Message);
-                    if (result.Notification != null)
-                        ConsolePrinter.Notification(result.Notification.Message);
+                    if (result.Notifications != null && result.Notifications.Any())
+                        foreach (var n in result.Notifications)
+                            ConsolePrinter.Notification(n.Message);
                 }
                 else
                 {
@@ -97,6 +99,34 @@ namespace Project.src.Controller
             catch (Exception ex)
             {
                 ConsolePrinter.Error($"Unexpected error: {ex.Message}");
+            }
+        }
+        public void ShowUserBorrowRecords()
+        {
+            ConsolePrinter.Header("MY BORROWED ITEMS");
+
+            var records = _borrowingService.GetBorrowRecords();
+
+            if (!records.Any())
+            {
+                ConsolePrinter.Warning("No borrow records found.");
+                return;
+            }
+
+            foreach (var record in records)
+            {
+                bool isReturned = record.ReturnedAt != null;
+                bool isOverdue = !isReturned && record.DueDate < DateTime.Now;
+
+                string status = isReturned ? "Returned" : isOverdue ? "OVERDUE" : "Active";
+                string line = $"[{status}] '{record.LibraryItem.Title}' | Borrowed: {record.BorrowedAt:dd/MM/yyyy} | Due: {record.DueDate:dd/MM/yyyy}";
+
+                if (isOverdue)
+                    ConsolePrinter.Error(line);
+                else if (isReturned)
+                    ConsolePrinter.Info(line);
+                else
+                    ConsolePrinter.Success(line);
             }
         }
     }
