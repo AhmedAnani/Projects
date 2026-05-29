@@ -157,7 +157,6 @@ public class LibraryApp
     {
         var id = InputHelper.GetInt("Enter item ID: ");
         var type = InputHelper.GetEnum<ItemType>("Choose type (1-Book, 2-EBook, 3-Magazine): ");
-
         var title = InputHelper.GetString("New Title: ");
         var catId = InputHelper.GetInt("New Category ID: ");
 
@@ -239,7 +238,7 @@ public class LibraryApp
         var id = InputHelper.GetInt("Enter user ID ");
         var name = InputHelper.GetString("New Name: ");
         var email = InputHelper.GetString("New Email: ");
-        var role = InputHelper.GetEnum<UserRole>("Role (0=User, 1=Admin): ");
+        var role = InputHelper.GetEnum<UserRole>("Role (0=User, 1=Admin, 2=Employee): ");
         _boot.UserManager.UpdateUser(_boot.CurrentUser, id, name, email, role);
     }
 

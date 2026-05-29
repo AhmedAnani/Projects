@@ -54,11 +54,8 @@ namespace Project.src.Data
 
             context.SaveChanges();
 
-            book1.BorrowItem();
-            book3.BorrowItem();
-
-            book2.BuyItem();
-            ebook1.BuyItem();
+           
+           
 
             // ================= 6. BORROW RECORDS =================
             context.BorrowRecords.AddRange(

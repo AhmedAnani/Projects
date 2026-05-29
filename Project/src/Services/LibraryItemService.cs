@@ -1,9 +1,11 @@
-﻿using Project.src.Exceptions;
+﻿using Project.src.Enums;
+using Project.src.Exceptions;
 using Project.src.Interfaces;
 using Project.src.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 
 namespace Project.src.Services
@@ -595,5 +597,8 @@ namespace Project.src.Services
             if (categoryId <= 0)
                 throw new ArgumentException("Invalid category ID.", nameof(categoryId));
         }
+
+      
+       
     }
 }
