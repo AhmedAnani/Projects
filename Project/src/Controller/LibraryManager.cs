@@ -129,5 +129,23 @@ namespace Project.src.Controller
                     ConsolePrinter.Success(line);
             }
         }
+        public void ShowAllPurchaseRecords()
+        {
+            ConsolePrinter.Header("ALL PURCHASE RECORDS");
+
+            var records = _buyingServise.GetAllPurchaseRecords();
+
+            if (!records.Any())
+            {
+                ConsolePrinter.Warning("No purchase records found.");
+                return;
+            }
+
+            foreach (var record in records)
+            {
+                string line = $"'{record.LibraryItem.Title}' | Buyer: {record.User.Name} | Purchased: {record.PurchasedAt:dd/MM/yyyy}";
+                ConsolePrinter.Info(line);
+            }
+        }
     }
 }

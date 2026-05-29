@@ -5,8 +5,8 @@ using Project.src.Models;
 
 public class LibraryApp
 {
+ 
     private readonly AppBootstrapper _boot;
-
     public LibraryApp(AppBootstrapper appBootstrapper)
     {
         _boot = appBootstrapper;
@@ -174,12 +174,26 @@ public class LibraryApp
             case "25":
                 ConsolePrinter.Info("Goodbye!");
                 break;
+            case "26":
+                HandleViewBorrowRecords();
+                break; 
+            case "27":
+                HandleViewPurchaseHistory();
+                break; 
             default:
                 ConsolePrinter.Warning("Invalid choice.");
                 break;
         }
     }
-
+    private void HandleViewBorrowRecords()
+    {
+        
+            _boot.Manager.ShowUserBorrowRecords();
+    }
+    private void HandleViewPurchaseHistory()
+    {
+        _boot.Manager.ShowAllPurchaseRecords();
+    }
     private void HandleViewAll()
         => _boot.ItemsManager.ShowAllItems(_boot.CurrentUser);
 
@@ -209,7 +223,7 @@ public class LibraryApp
 
     private void HandleAddItem()
     {
-        var type = InputHelper.GetEnum<ItemType>("Choose type (Book, EBook, Magazine): ");
+        var type = InputHelper.GetEnum<ItemType>("Choose type (1-Book, 2-EBook, 3-Magazine): ");
         var title = InputHelper.GetRequiredString("Title: ");
         var categoryId = InputHelper.GetInt("Category ID: ");
 
@@ -331,7 +345,7 @@ public class LibraryApp
         var id = InputHelper.GetInt("Enter user ID ");
         var name = InputHelper.GetRequiredString("New Name: ");
         var email = InputHelper.GetRequiredString("New Email: ");
-        var role = InputHelper.GetEnum<UserRole>("Role (0=User, 1=Admin): ");
+        var role = InputHelper.GetEnum<UserRole>("Role (0=User, 1=Admin 2-Employee): ");
         _boot.UserManager.UpdateUser(_boot.CurrentUser, id, name, email, role);
     }
 

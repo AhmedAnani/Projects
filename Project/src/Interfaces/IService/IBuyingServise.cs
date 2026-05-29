@@ -10,5 +10,6 @@ namespace Project.src.Interfaces.IService
     public interface IBuyingServise
     {
         public Result ProcessBuy(User user, LibraryItem item);
+        public IEnumerable<PurchaseRecord> GetAllPurchaseRecords();
     }
 }

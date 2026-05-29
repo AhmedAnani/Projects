@@ -77,6 +77,7 @@ namespace Project.src.App
             if (auth.CanViewReports(currentUser))
             {
                 options.Add("26. View Borrow Records");
+                options.Add("27. View Purchase Records");
             }
            
             options.Add("25. Exit");

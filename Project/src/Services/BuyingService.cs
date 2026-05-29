@@ -47,5 +47,13 @@ namespace Project.src.Services
             }
 
         }
+        public IEnumerable<PurchaseRecord> GetAllPurchaseRecords()
+        {
+            return _purchaseRecordRepository.GetAll(
+                 pr => pr.User,
+                 pr => pr.LibraryItem
+                   );
+        }
+
     }
 }
