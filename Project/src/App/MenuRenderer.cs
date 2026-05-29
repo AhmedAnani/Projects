@@ -1,51 +1,99 @@
-﻿using Project.src.Interfaces;
+﻿using Project.src.Enums;
+using Project.src.Interfaces;
 using Project.src.Models;
 
 namespace Project.src.App
 {
     public static class MenuRenderer
     {
-        public static void ShowMenu(User currentUser, IAuthorizationService auth)
+        public static void ShowRoleMenu()
         {
-          
-            Console.WriteLine("=== Library Management System ===");
-            Console.WriteLine("1. View All Items");
-
-            if (auth.CanBuy(currentUser))
+            PrintBox("Choose Current User Role", new[]
             {
-                Console.WriteLine("2. Search for Item (by ID)");
-                Console.WriteLine("3. Buy an Item");
-                Console.WriteLine("4. Borrow a Book");
-                Console.WriteLine("5. Return a Book");
-            }
-
-            Console.WriteLine("6. Exit");
-
-            if (auth.CanAddItems(currentUser)) Console.WriteLine("7. Add New Item");       
-             if(auth.CanUpdateItems(currentUser))  Console.WriteLine("8. Update Item");
-             if(auth.CanDeleteItems(currentUser))  Console.WriteLine("9. Delete Item");
-            
-
-            if (auth.CanManageUsers(currentUser))
-            {
-              
-                Console.WriteLine("10. Add a User");
-                Console.WriteLine("11. Update User info");
-                Console.WriteLine("12. Delete User");
-                Console.WriteLine("13. List Users");
-            }
+                "1. User",
+                "2. Admin",
+                "3. Employee",
+                "4. Exit"
+            });
 
             Console.Write("\nEnter your choice: ");
         }
 
-        public static void PrintItems(IEnumerable<LibraryItem> items)
+        public static void ShowMenu(User currentUser, IAuthorizationService auth)
         {
-            if (!items.Any()) { Console.WriteLine("No items found."); return; }
-            foreach (var item in items)
+            var options = new List<string>
             {
-                item.DisplayInfo();
-                Console.WriteLine("------------");
+                $"Current User: {currentUser.Name} ({currentUser.Role})",
+                ""
+            };
+
+            if (auth.CanViewItems(currentUser))
+            {
+                options.Add("1. View All Items");
+                options.Add("2. Get Item By ID");
+                options.Add("10. Search Item By Title");
+                options.Add("11. Get Available Items");
+                options.Add("12. Get Items By Category");
+                options.Add("13. Get Items Ordered By Title");
+                options.Add("18. Get Categories Ordered By Name");
             }
+
+            if (auth.CanBuy(currentUser))
+                options.Add("3. Buy an Item");
+
+            if (auth.CanBorrow(currentUser))
+            {
+                options.Add("4. Borrow a Book");
+                options.Add("5. Return a Book");
+            }
+
+            if (auth.CanAddItems(currentUser))
+            {
+                options.Add("6. Add New Item");
+                options.Add("15. Add Category");
+            }
+
+            if (auth.CanUpdateItems(currentUser))
+            {
+                options.Add("7. Update Item");
+                options.Add("16. Update Category");
+            }
+
+            if (auth.CanDeleteItems(currentUser))
+            {
+                options.Add("8. Delete Item");
+                options.Add("17. Delete Category");
+            }
+
+            if (auth.CanManageUsers(currentUser))
+            {
+                options.Add("19. Add User");
+                options.Add("20. Update User");
+                options.Add("21. Delete User");
+                options.Add("22. Get All Users");
+                options.Add("23. Get User By ID");
+                options.Add("24. Get User By Email");
+            }
+
+            options.Add("25. Exit");
+
+            PrintBox("Library Management System", options);
+            Console.Write("\nEnter your choice: ");
+        }
+
+        private static void PrintBox(string title, IEnumerable<string> lines)
+        {
+            var content = lines.ToList();
+            int width = Math.Max(title.Length, content.Any() ? content.Max(x => x.Length) : 0) + 4;
+
+            Console.WriteLine("+" + new string('-', width) + "+");
+            Console.WriteLine("| " + title.PadRight(width - 2) + " |");
+            Console.WriteLine("+" + new string('-', width) + "+");
+
+            foreach (var line in content)
+                Console.WriteLine("| " + line.PadRight(width - 2) + " |");
+
+            Console.WriteLine("+" + new string('-', width) + "+");
         }
     }
 }

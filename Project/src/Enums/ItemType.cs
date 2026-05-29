@@ -8,8 +8,8 @@ namespace Project.src.Enums
 {
     public enum ItemType
     {
-        Book,
-        EBook,
-        Magazine
+        Book = 1,
+        EBook = 2,
+        Magazine = 3
     }
 }
