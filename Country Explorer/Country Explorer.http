@@ -1,0 +1,6 @@
+@Country_Explorer_HostAddress = http://localhost:5212
+
+GET {{Country_Explorer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
